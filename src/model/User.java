@@ -9,7 +9,7 @@ public class User {
 	private String firstName;
 	private String lastName;
 	private String roleType;
-	private int userInterest;
+	private int interestArea;
 	private String city;
 	private String state;
 	private int followersNum; // Should be array of users or user id
@@ -21,7 +21,7 @@ public class User {
 	        firstName = "";
 	        lastName = "";
 	        roleType = "";
-	        userInterest = 1;
+	        interestArea = 1;
 	        city = "";
 	        state = "";
 	        followersNum = 0;
@@ -29,12 +29,12 @@ public class User {
 	        imageURL ="";
 	    }
 	 
-	    public User(String username, String firstName, String lastName, String roleType,int userInterest, String city, String state, String imageURL) {
+	    public User(String username, String firstName, String lastName, String roleType,int interestArea, String city, String state, String imageURL) {
 	    	this.username = username;
 	    	this.firstName = firstName;
 	    	this.lastName = lastName;
 	    	this.roleType = roleType;
-	    	this.userInterest = userInterest;
+	    	this.interestArea = interestArea;
 	    	this.city = city;
 	    	this.state = state;
 	    	this.followersNum = 0;
@@ -79,11 +79,11 @@ public class User {
 	public void setRoleId(String roleType) {
 		this.roleType = roleType;
 	}
-	public int getUserInterest() {
-		return userInterest;
+	public int getInterestArea() {
+		return interestArea;
 	}
-	public void setUserInterest(int userInterest) {
-		this.userInterest = userInterest;
+	public void setInterestArea(int interestArea) {
+		this.interestArea = interestArea;
 	}
 	public String getCity() {
 		return city;
@@ -120,7 +120,7 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [userId=" + userId + ", username=" + username + ", password=" + password + ", firstName="
-				+ firstName + ", lastName=" + lastName + ", roleType=" + roleType + ", userInterest=" + userInterest
+				+ firstName + ", lastName=" + lastName + ", roleType=" + roleType + ", userInterest=" + interestArea
 				+ ", city=" + city + ", state=" + state + ", followersNum=" + followersNum + ", followingNum="
 				+ followingNum + ", imageURL=" + imageURL + "]";
 	}

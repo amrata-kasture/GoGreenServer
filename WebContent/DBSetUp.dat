@@ -1,0 +1,76 @@
+
+GETIDRIGHT_USER = ALTER TABLE user AUTO_INCREMENT=1
+ADD_USER = Insert IGNORE into user (user_name, password, first_name, last_name, user_type, user_interest, city, state, picture, creation_date  ) Values (?,?,?,?,?,?,?,?,?,NOW())
+READ_USER =  Select * from user 
+GET_USER_Role = Select user_type from user Where id = ? 
+UPDATE_USER = Update user SET password = ? Where id = ?  
+DELETE_USER = Delete from user where id = ?
+
+GETIDRIGHT_GR_ENTRY = ALTER TABLE green_entry AUTO_INCREMENT=1
+ADD_GR_ENTRY = Insert IGNORE into green_entry (user_id, type, message, picture, creation_date) Values (?,?,?,?,NOW())
+READ_GR_ENTRY =  Select * from green_entry Where id = ? 
+READ_GR_ENTRY_USER =  Select * from green_entry Where user_id = ? 
+UPDATE_GR_ENTRY = Update green_entry SET message = ? Where id = ?  
+DELETE_GR_ENTRY = Delete from green_entry where id = ?
+
+
+GETIDRIGHT_QA_REL = ALTER TABLE question_answer_relation AUTO_INCREMENT=1
+ADD_QA_REL = Insert IGNORE into question_answer_relation (question_id, answer_id, creation_date) Values (?,?,NOW())
+READ_QA_REL =  Select * from question_answer_relation Where question_id = ? 
+UPDATE_QA_REL = Update question_answer_relation SET answer_id = ? Where id = ?  
+DELETE_QA_REL = Delete from question_answer_relation where id = ?
+DELETE_QUESTION = Delete from question_answer_relation where question_id = ?
+
+
+GETIDRIGHT_EVENT = ALTER TABLE event AUTO_INCREMENT=1
+ADD_EVENT = Insert IGNORE into event (title, description, location, event_date, start_time, end_time, creator_id, interest_category, creation_date) Values (?,?,?,?,?,?,?,?,NOW())
+READ_EVENT =  Select * from event Where id = ? 
+READ_CREATOR_EVENT =  Select * from event Where creator_id = ? 
+UPDATE_EVENT = Update event SET location = ? Where id = ?  
+UPDATE_EVENT = Update event SET 
+DELETE_EVENT = Delete from event where id = ?
+
+GETIDRIGHT_NOTIFICATION = ALTER TABLE notification AUTO_INCREMENT=1
+ADD_NOTIFICATION = Insert IGNORE into notification (green_entry_id, event_id, notification_message, creation_date) Values (?,?,?,NOW())
+READ_NOTIFICATION =  Select * from notification Where id = ? 
+UPDATE_NOTIFICATION = Update notification SET notification_message = ? Where id = ? 
+UPDATE_NOTIFICATION = Update notification SET 
+DELETE_NOTIFICATION = Delete from notification where id = ?
+
+
+GETIDRIGHT_INTR_AREA = ALTER TABLE interest_area AUTO_INCREMENT=1
+ADD_INTR_AREA = Insert IGNORE into interest_area (category, description, creation_date) Values (?,?,NOW())
+READ_INTR_AREA =  Select * from interest_area Where id = ? 
+UPDATE_INTR_AREA = Update interest_area SET description = ? Where id = ?  
+UPDATE_INTR_AREA = Update interest_area SET  
+DELETE_INTR_AREA = Delete from interest_area where id = ?
+
+
+GETIDRIGHT_FOLLOWING = ALTER TABLE following AUTO_INCREMENT=1
+ADD_FOLLOWING = Insert IGNORE into following (followed_id, follower_id, creation_date) Values (?,?,NOW())
+READ_FOLLOWING =  Select * from following Where id = ? 
+READ_FOLLOWED_COUNT = Select count(1) from following Where followed_id = ? 
+READ_FOLLOWING_COUNT = Select count(1) from following Where follower_id = ? 
+
+UPDATE_FOLLOWING = Update following SET follower_id = ? Where id = ?  
+UPDATE_FOLLOWING = Update following SET  
+DELETE_FOLLOWING = Delete from following where id = ?
+DELETE_A_FOLLOWING = Delete from following where follower_id = ? and followed_id = ?
+
+
+GETIDRIGHT_SHARE = ALTER TABLE share AUTO_INCREMENT=1
+ADD_SHARE = Insert IGNORE into share (shared_by_id, green_entry_id, creation_date) Values (?,?,NOW())
+READ_SHARE =  Select * from share Where id = ? 
+READ_USER_SHARE =  Select * from share Where shared_by_id = ? 
+UPDATE_SHARE = Update share SET green_entry_id = ? Where id = ?  
+DELETE_SHARE = Delete from share where id = ?
+DELETE_USER_SHARE = Delete from share where shared_by_id = ?
+
+
+GETIDRIGHT_PLANT = ALTER TABLE plant AUTO_INCREMENT=1
+ADD_PLANT = Insert IGNORE into plant (interest_area_id, name, botonical_name, description, creation_date) Values (?,?,?,?,NOW())
+READ_PLANT =  Select * from plant Where id = ? 
+READ_PLANT_GROUP =  Select * from plant Where interest_area_id = ?
+UPDATE_PLANT = Update plant SET botonical_name = ? Where id = ?  
+UPDATE_PLANT = Update plant SET  
+DELETE_PLANT = Delete from plant where id = ?

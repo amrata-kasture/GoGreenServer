@@ -11,7 +11,7 @@ public class Driver {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		DatabaseConnector dc = new DatabaseConnector();
+		//DatabaseConnector dc = new DatabaseConnector();
 		try {
 			java.sql.Connection conn = DatabaseConnector.getConnection();
 			DatabaseConnector.createDB(conn);

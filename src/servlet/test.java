@@ -136,9 +136,7 @@ public class test extends HttpServlet {
     	            System.out.println("JUST THERE");
     	            writer.write(jsonString);
     	            System.out.println("I AM OUT");
-
     	            writer.flush();
-
     	            writer.close();
 
     	 

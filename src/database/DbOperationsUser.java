@@ -16,12 +16,20 @@ public class DbOperationsUser {
 	Properties props = new Properties();
 	FileInputStream in;
 	Connection conn;
-	public DbOperationsUser(){
+	public DbOperationsUser(String filename1,String filename2){
 			try {
-				this.conn = DatabaseConnector.getConnection();
+				this.conn = DatabaseConnector.getConnection(filename1);
+				FileInputStream in = new FileInputStream(filename1);
+				Properties configProps = new Properties();
+				configProps.load(in);
+				Statement stmt=conn.createStatement(); 
+				String query = configProps.getProperty("USE_DB");
+				stmt.executeUpdate(query);
 				String fileName = "DBSetUp.dat";
-			    this.in = new FileInputStream(fileName);
-			    props.load(in);
+			    //this.in = new FileInputStream(fileName);
+				this.in = new FileInputStream(filename2);
+				props.load(in);
+			    
 			} catch (ClassNotFoundException | SQLException | IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -29,36 +37,42 @@ public class DbOperationsUser {
 	}
 	
 	public int AddUser(User u) {
-		int res = 1;
+		int last_inserted_id  = 0;
 		Statement stmt;
 		try {
 			stmt = conn.createStatement();
-		
+			props.load(in);
 		String query =  props.getProperty("GETIDRIGHT_USER");
+		System.out.println("########"+query);
 		stmt.executeUpdate(query);
 		query =  props.getProperty("ADD_USER");
+		System.out.println("########"+query);
 		
-		PreparedStatement preparedStmt = conn.prepareStatement(query);
+		PreparedStatement preparedStmt = conn.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
 		preparedStmt.setString (1, u.getUsername());
 		preparedStmt.setString (2, u.getPassword());
 		preparedStmt.setString (3, u.getFirstName());
 		preparedStmt.setString (4, u.getLastName());
 		preparedStmt.setString (5, u.getRoleType());
-		preparedStmt.setInt (6, u.getUserInterest());
+		preparedStmt.setInt (6, u.getInterestArea());
 		preparedStmt.setString (7, u.getCity());
 		preparedStmt.setString (8, u.getState());
 		preparedStmt.setString (9, u.getImageURL());
-		
-		preparedStmt.execute();
+		preparedStmt.executeUpdate();
+		ResultSet rs = preparedStmt.getGeneratedKeys();
+        if(rs.next())
+        {
+            last_inserted_id = rs.getInt(1);
+            System.out.println("$$$$$$$$$$$$$"+last_inserted_id);
+        }
 		stmt.close();
-		} catch (SQLException e1) {
-			res=0;
+		} catch (SQLException | IOException e1) {
 			e1.printStackTrace();
 		} 
-		return res;
+		return last_inserted_id;
 	}
 	
-	public ArrayList<String> ReadUser() {
+	public ArrayList<String> ReadUsers() {
 		ArrayList<String> arr = new ArrayList<String>();
 		Statement stmt;
 		try {
@@ -89,6 +103,22 @@ public class DbOperationsUser {
 			e.printStackTrace();
 		}
 		return arr;	
+	}
+	
+	public String GetUserRole(int id){
+		String role = "";
+		   try{
+			   String query =  props.getProperty("GET_USER_ID");
+			   PreparedStatement preparedStmt = conn.prepareStatement(query);
+			   preparedStmt.setInt (1, id);
+			   ResultSet rs = preparedStmt.executeQuery();
+			   if (rs.next()) {
+				   role = rs.getString(1);
+			   }
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+		return role;
 	}
 	
 	public int UpdateUser(int id, String valLabel, String val) {

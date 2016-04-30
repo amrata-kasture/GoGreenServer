@@ -1,6 +1,7 @@
 package database;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
@@ -10,12 +11,25 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 
+import javax.print.DocFlavor.URL;
+import javax.servlet.ServletContext;
+
 public class DatabaseConnector {
 	static Properties configProps = new Properties();
 	static String Configfile = "DBConfig.properties";
 	static String ROOT_USERNAME="root";
 	static String ROOT_PASSWORD="mysql123";
 	
+	public static Connection getConnection(String filename)
+			throws SQLException, IOException, ClassNotFoundException
+	{  
+		FileInputStream in = new FileInputStream(filename);
+		configProps.load(in);
+		String drivers = configProps.getProperty("JDBC_DRIVER");
+		Class.forName("com.mysql.jdbc.Driver");
+		//return DriverManager.getConnection("jdbc:mysql://localhost/?user=root");
+		return DriverManager.getConnection("jdbc:mysql://localhost/",ROOT_USERNAME,ROOT_PASSWORD);
+	}
 	public static Connection getConnection()
 			throws SQLException, IOException, ClassNotFoundException
 	{  
@@ -23,6 +37,7 @@ public class DatabaseConnector {
 		configProps.load(in);
 		String drivers = configProps.getProperty("JDBC_DRIVER");
 		Class.forName("com.mysql.jdbc.Driver");
+		//return DriverManager.getConnection("jdbc:mysql://localhost/?user=root");
 		return DriverManager.getConnection("jdbc:mysql://localhost/",ROOT_USERNAME,ROOT_PASSWORD);
 	}
 	
