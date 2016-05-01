@@ -54,7 +54,13 @@ public class DbOperationsUser {
 		preparedStmt.setString (3, u.getFirstName());
 		preparedStmt.setString (4, u.getLastName());
 		preparedStmt.setString (5, u.getRoleType());
-		preparedStmt.setInt (6, u.getInterestArea());
+		if(u.getInterestArea().equals("Indoor")){
+			preparedStmt.setInt (6, 1);
+		}else if(u.getInterestArea().equals("Outdoor")){
+			preparedStmt.setInt (6, 2);
+		}else{
+			preparedStmt.setInt (6, 3);
+		}
 		preparedStmt.setString (7, u.getCity());
 		preparedStmt.setString (8, u.getState());
 		preparedStmt.setString (9, u.getImageURL());

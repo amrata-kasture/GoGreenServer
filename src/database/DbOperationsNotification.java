@@ -28,27 +28,51 @@ public class DbOperationsNotification {
 			}
 	}
 	
+	public DbOperationsNotification(String filename1,String filename2){
+		try {
+			this.conn = DatabaseConnector.getConnection(filename1);
+			FileInputStream in = new FileInputStream(filename1);
+			Properties configProps = new Properties();
+			configProps.load(in);
+			Statement stmt=conn.createStatement(); 
+			String query = configProps.getProperty("USE_DB");
+			stmt.executeUpdate(query);
+			this.in = new FileInputStream(filename2);
+			props.load(in);
+		    
+		} catch (ClassNotFoundException | SQLException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public int AddNotification(Notification n) {
-		int res = 1;
+		int last_inserted_id = 0;
 		Statement stmt;
 		try {
 			stmt = conn.createStatement();
+			props.load(in);
 		
 		String query =  props.getProperty("GETIDRIGHT_NOTIFICATION");
 		stmt.executeUpdate(query);
 		query =  props.getProperty("ADD_NOTIFICATION");
 		
-		PreparedStatement preparedStmt = conn.prepareStatement(query);
+		PreparedStatement preparedStmt = conn.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
 		preparedStmt.setInt (1, (n).getGreenEntryId());
 		preparedStmt.setInt (2, n.getEventId());
 		preparedStmt.setString (3, n.getNotificationMessage());
-		preparedStmt.execute();
+		preparedStmt.executeUpdate();
+		ResultSet rs = preparedStmt.getGeneratedKeys();
+        if(rs.next())
+        {
+            last_inserted_id = rs.getInt(1);
+            System.out.println("$$$$$$$$$$$$$"+last_inserted_id);
+        }
 		stmt.close();
-		} catch (SQLException e1) {
-			res=0;
+		} catch (SQLException | IOException e1) {
 			e1.printStackTrace();
 		} 
-		return res;
+		return last_inserted_id;
 	}
 	
 	public ArrayList<String> ReadNotification() {

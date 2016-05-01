@@ -16,7 +16,13 @@ public class DbOperationsInterestArea {
 	Connection conn;
 	public DbOperationsInterestArea(){
 			try {
-				this.conn = DatabaseConnector.getConnection();
+				this.conn = DatabaseConnector.getConnection("DBConfig.properties");
+				FileInputStream in = new FileInputStream("DBConfig.properties");
+				Properties configProps = new Properties();
+				configProps.load(in);
+				Statement stmt=conn.createStatement(); 
+				String query = configProps.getProperty("USE_DB");
+				stmt.executeUpdate(query);
 				String fileName = "DBSetUp.dat";
 			    this.in = new FileInputStream(fileName);
 			    props.load(in);
@@ -31,7 +37,7 @@ public class DbOperationsInterestArea {
 		Statement stmt;
 		try {
 			stmt = conn.createStatement();
-		
+			props.load(in);
 		String query =  props.getProperty("GETIDRIGHT_INTR_AREA");
 		stmt.executeUpdate(query);
 		query =  props.getProperty("ADD_INTR_AREA");
@@ -41,7 +47,7 @@ public class DbOperationsInterestArea {
 		preparedStmt.setString (2,descr);
 		preparedStmt.execute();
 		stmt.close();
-		} catch (SQLException e1) {
+		} catch (SQLException | IOException e1) {
 			res=0;
 			e1.printStackTrace();
 		} 

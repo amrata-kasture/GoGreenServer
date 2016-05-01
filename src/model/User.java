@@ -9,7 +9,7 @@ public class User {
 	private String firstName;
 	private String lastName;
 	private String roleType;
-	private int interestArea;
+	private String interestArea;
 	private String city;
 	private String state;
 	private int followersNum; // Should be array of users or user id
@@ -21,7 +21,7 @@ public class User {
 	        firstName = "";
 	        lastName = "";
 	        roleType = "";
-	        interestArea = 1;
+	        interestArea = "";
 	        city = "";
 	        state = "";
 	        followersNum = 0;
@@ -29,7 +29,7 @@ public class User {
 	        imageURL ="";
 	    }
 	 
-	    public User(String username, String firstName, String lastName, String roleType,int interestArea, String city, String state, String imageURL) {
+	    public User(String username, String firstName, String lastName, String roleType,String interestArea, String city, String state, String imageURL) {
 	    	this.username = username;
 	    	this.firstName = firstName;
 	    	this.lastName = lastName;
@@ -60,10 +60,12 @@ public class User {
 	
 	public void setPassword() {
 		this.password = password;
-	} 
+	}
+	
 	public String getFirstName() {
 		return firstName;
 	}
+	
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
@@ -79,10 +81,10 @@ public class User {
 	public void setRoleId(String roleType) {
 		this.roleType = roleType;
 	}
-	public int getInterestArea() {
+	public String getInterestArea() {
 		return interestArea;
 	}
-	public void setInterestArea(int interestArea) {
+	public void setInterestArea(String interestArea) {
 		this.interestArea = interestArea;
 	}
 	public String getCity() {

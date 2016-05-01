@@ -28,28 +28,54 @@ public class DbOperationsGreenEntry {
 			}
 	}
 	
+	public DbOperationsGreenEntry(String filename1,String filename2){
+		try {
+			this.conn = DatabaseConnector.getConnection(filename1);
+			FileInputStream in = new FileInputStream(filename1);
+			Properties configProps = new Properties();
+			configProps.load(in);
+			Statement stmt=conn.createStatement(); 
+			String query = configProps.getProperty("USE_DB");
+			stmt.executeUpdate(query);
+			String fileName = "DBSetUp.dat";
+		    //this.in = new FileInputStream(fileName);
+			this.in = new FileInputStream(filename2);
+			props.load(in);
+		    
+		} catch (ClassNotFoundException | SQLException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+}
+	
 	public int AddGreenEntry(GreenEntry ge) {
-		int res = 1;
+		int last_inserted_id  = 0;
 		Statement stmt;
 		try {
 			stmt = conn.createStatement();
+			props.load(in);
 		
 		String query =  props.getProperty("GETIDRIGHT_GR_ENTRY");
 		stmt.executeUpdate(query);
 		query =  props.getProperty("ADD_GR_ENTRY");
 		
-		PreparedStatement preparedStmt = conn.prepareStatement(query);
+		PreparedStatement preparedStmt = conn.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
 		preparedStmt.setInt (1, ge.getPostedByUserId());
 		preparedStmt.setString (2, ge.getPostType());
 		preparedStmt.setString (3, ge.getPostMessage());
 		preparedStmt.setString (4, ge.getPostImageURL());
-		preparedStmt.execute();
+		preparedStmt.executeUpdate();
+		ResultSet rs = preparedStmt.getGeneratedKeys();
+        if(rs.next())
+        {
+            last_inserted_id = rs.getInt(1);
+            System.out.println("$$$$$$$$$$$$$"+last_inserted_id);
+        }
 		stmt.close();
-		} catch (SQLException e1) {
-			res=0;
+		} catch (SQLException | IOException e1) {
 			e1.printStackTrace();
 		} 
-		return res;
+		return last_inserted_id;
 	}
 	
 	public ArrayList<String> ReadGreenEntry() {
