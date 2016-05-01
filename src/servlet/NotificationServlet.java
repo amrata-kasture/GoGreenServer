@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import database.DbOperationsNotification;
@@ -70,15 +71,12 @@ public class NotificationServlet extends HttpServlet {
 	          int notificationid = dbOpNotify.AddNotification(n);
 			  
 	          OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
-	          
-	          String outInt = String.valueOf(notificationid);
-	          System.out.println("*************"+outInt);
-	         
-	          writer.write(outInt);
-	 
+	          JSONObject jsonReturn = new JSONObject();
+	          jsonReturn.put("notificationId", notificationid);
+	          writer.write(jsonReturn.toString());
 	          writer.flush();
 	          writer.close();
-	        } catch (IOException e) {
+	        } catch (IOException | JSONException e) {
 	          try{
 	        	  response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 	              response.getWriter().print(e.getMessage());

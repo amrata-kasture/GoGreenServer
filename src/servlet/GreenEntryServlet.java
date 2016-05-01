@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import database.DbOperationsGreenEntry;
@@ -72,13 +73,12 @@ public class GreenEntryServlet extends HttpServlet {
           int geId = dbOpGE.AddGreenEntry(ge);
 		  
           OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
-          String outId = String.valueOf(geId);
-         
-          writer.write(outId);
- 
+          JSONObject jsonReturn = new JSONObject();
+          jsonReturn.put("greenEntryId", geId);
+          writer.write(jsonReturn.toString());
           writer.flush();
           writer.close();
-        } catch (IOException e) {
+        } catch (IOException | JSONException e) {
           try{
         	  response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
               response.getWriter().print(e.getMessage());

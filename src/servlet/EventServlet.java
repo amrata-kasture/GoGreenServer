@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import database.DbOperationsEvent;
@@ -71,15 +72,13 @@ public class EventServlet extends HttpServlet {
 	          System.out.println("*************"+eventid);
 			  
 	          OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
-	          String outInt = String.valueOf(eventid);
-	          System.out.println("*************"+outInt);
-	         
-	          writer.write(outInt);
-	          
+	          JSONObject jsonReturn = new JSONObject();
+	          jsonReturn.put("eventId", eventid);
+	          writer.write(jsonReturn.toString());
 	          writer.flush();
-	          System.out.println("**FLUSHED**"+outInt);
+	        
 	          writer.close();
-	        } catch (IOException e) {
+	        } catch (IOException | JSONException e) {
 	          try{
 	        	  response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 	              response.getWriter().print(e.getMessage());

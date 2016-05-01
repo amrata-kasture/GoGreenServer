@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import database.DatabaseConnector;
@@ -76,13 +77,12 @@ public class EditUserServlet extends HttpServlet {
           int userid = dbOpUser.UpdateUser(usr);
 		  
           OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
-          String outString = String.valueOf(userid);
-         
-          writer.write(outString);
- 
+          JSONObject jsonReturn = new JSONObject();
+          jsonReturn.put("userId", userid);
+          writer.write(jsonReturn.toString());
           writer.flush();
           writer.close();
-        } catch (IOException e) {
+        } catch (IOException | JSONException e) {
           try{
         	  response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
               response.getWriter().print(e.getMessage());
