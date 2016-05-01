@@ -75,7 +75,8 @@ public class DbOperationsUser {
 		} catch (SQLException | IOException e1) {
 			e1.printStackTrace();
 		} 
-		return last_inserted_id;
+		int uid = GetUserIdByUsername(u.getUsername());
+		return uid;
 	}
 	
 	public ArrayList<String> ReadUsers() {
@@ -114,7 +115,7 @@ public class DbOperationsUser {
 	public String GetUserRole(int id){
 		String role = "";
 		   try{
-			   String query =  props.getProperty("GET_USER_ID");
+			   String query =  props.getProperty("GET_USER_ROLE");
 			   PreparedStatement preparedStmt = conn.prepareStatement(query);
 			   preparedStmt.setInt (1, id);
 			   ResultSet rs = preparedStmt.executeQuery();
@@ -127,22 +128,55 @@ public class DbOperationsUser {
 		return role;
 	}
 	
-	public int UpdateUser(int id, String valLabel, String val) {
-		int res = 1;
-		Statement stmt;
+	public int GetUserIdByUsername(String username){
+		int userid = 0;
 		   try{
-			   stmt = conn.createStatement();
-			   String query =  props.getProperty("UPDATE_USER");
-			   query = query + " "+valLabel+" = '"+val+ "' where id = "+id;
-			   //PreparedStatement preparedStmt = conn.prepareStatement(query);
-			   //preparedStmt.executeUpdate();
-			   stmt.executeUpdate(query);
-			   stmt.close();
-				} catch (SQLException e) {
-					res=0;
+			   props.load(in);
+			   String query =  props.getProperty("GET_USERID_BY_UNAME");
+			   PreparedStatement preparedStmt = conn.prepareStatement(query);
+			   preparedStmt.setString (1, username);
+			   ResultSet rs = preparedStmt.executeQuery();
+			   if (rs.next()) {
+				   userid = rs.getInt(1);
+			   }
+				} catch (SQLException | IOException e) {
 					e.printStackTrace();
 				}
-		return res;
+		return userid;
+	}
+	
+	public int UpdateUser(User u) {
+		Statement stmt;
+		try {
+			stmt = conn.createStatement();
+			props.load(in);
+		
+			String query =  props.getProperty("UPDATE_USER");
+		
+		
+		PreparedStatement preparedStmt = conn.prepareStatement(query);
+		preparedStmt.setString (1, u.getFirstName());
+		preparedStmt.setString (2, u.getLastName());
+		preparedStmt.setString (3, u.getRoleType());
+		if(u.getInterestArea().equals("Indoor")){
+			preparedStmt.setInt (4, 1);
+		}else if(u.getInterestArea().equals("Outdoor")){
+			preparedStmt.setInt (4, 2);
+		}else{
+			preparedStmt.setInt (4, 3);
+		}
+		preparedStmt.setString (5, u.getCity());
+		preparedStmt.setString (6, u.getState());
+		preparedStmt.setString (7, u.getImageURL());
+		preparedStmt.setInt (8, u.getUserId());
+		preparedStmt.executeUpdate();
+		stmt.close();
+		} catch (SQLException | IOException e1) {
+			e1.printStackTrace();
+		} 
+		
+		return  u.getUserId();
+		
 	}
 	
 	public int DeleteUser(int id) {
