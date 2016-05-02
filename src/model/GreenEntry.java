@@ -15,7 +15,8 @@ public class GreenEntry {
 	private int numOfStars;
 	
 	
-	public GreenEntry(int userid_posted, String postTypeString, String postMsg, Blob blob, Date date) {
+	public GreenEntry(int postidInt,int userid_posted, String postTypeString, String postMsg, Blob blob, Date date) {
+		this.postId=postidInt;
 		this.postedByUserId = userid_posted;
 		this.postType = postTypeString;
 		this.postMessage = postMsg;

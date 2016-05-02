@@ -90,7 +90,7 @@ public class DbOperationsGreenEntry {
 			//int columnCount = rsmd.getColumnCount();
 			while (rs.next())
 			{  
-				arr.add(new GreenEntry(rs.getInt("user_id"),rs.getString("type"),rs.getString("message"),rs.getBlob("picture"),rs.getDate("creation_date")));
+				arr.add(new GreenEntry(rs.getInt("id"),rs.getInt("user_id"),rs.getString("type"),rs.getString("message"),rs.getBlob("picture"),rs.getDate("creation_date")));
 			}
 			rs.close();
 			stmt.close();
