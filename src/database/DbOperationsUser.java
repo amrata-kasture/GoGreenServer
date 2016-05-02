@@ -1,6 +1,9 @@
 package database;
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -127,6 +130,85 @@ public class DbOperationsUser {
 				}
 		return role;
 	}
+	
+	// convert InputStream to String
+			private static String getStringFromInputStream(InputStream is) {
+
+				BufferedReader br = null;
+				StringBuilder sb = new StringBuilder();
+
+				String line;
+				try {
+
+					br = new BufferedReader(new InputStreamReader(is));
+					while ((line = br.readLine()) != null) {
+						sb.append(line);
+					}
+
+				} catch (IOException e) {
+					e.printStackTrace();
+				} finally {
+					if (br != null) {
+						try {
+							br.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+
+				return sb.toString();
+
+			}
+
+		public User GetUserDetailsFromUserId(int userId){
+			User user = new User();
+			   try{
+				   props.load(in);
+				   String query =  props.getProperty("GET_USER_DETAILS");
+				   System.out.println("************ userId="+userId);
+				   System.out.println("************ query="+query);
+				   int interestArea = 0;
+				   PreparedStatement preparedStmt = conn.prepareStatement(query);
+				   preparedStmt.setInt (1, userId);
+				   ResultSet rs = preparedStmt.executeQuery();
+				   if (rs.next()) {
+					   System.out.println("************ rs="+rs.getInt(1));
+					   System.out.println("************ rs="+rs.getString(4));
+					   System.out.println("************ rs="+rs.getString(5));
+					   System.out.println("************ rs="+rs.getString(6));
+					   System.out.println("******INTEREST****** rs="+rs.getInt(7));
+					   System.out.println("************ rs="+rs.getString(8));
+					   System.out.println("************ rs="+rs.getString(9));
+					   System.out.println("************ rs="+rs.getBinaryStream(10));
+					   user.setUserId(rs.getInt(1));
+					   user.setFirstName(rs.getString(4));
+					   user.setLastName(rs.getString(5));
+					   user.setRoleId(rs.getString(6));
+					   interestArea = rs.getInt(7);
+					   user.setCity(rs.getString(8));
+					   user.setState(rs.getString(9));
+					   if(rs.getBinaryStream(10)!=null){
+						   InputStream is = rs.getBinaryStream(10);
+						   user.setImageURL(getStringFromInputStream(is));
+					   }
+				   }
+				   String query1 =  props.getProperty("GET_INTEREST_AREA");
+				   System.out.println("************ query1="+query1);
+				   PreparedStatement preparedStmt1 = conn.prepareStatement(query1);
+				   preparedStmt1.setInt (1, interestArea);
+				   ResultSet rs1 = preparedStmt1.executeQuery();
+				   if (rs1.next()) {
+					   System.out.println("************ rs1="+rs1.getString(1));
+					   user.setInterestArea(rs1.getString(1));
+				   }
+				} catch (SQLException | IOException e) {
+					e.printStackTrace();
+				}
+			return user;
+		}
+
+	
 	
 	public int GetUserIdByUsername(String username){
 		int userid = 0;

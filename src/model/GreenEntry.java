@@ -1,5 +1,8 @@
 package model;
 
+import java.sql.Blob;
+import java.sql.Date;
+
 public class GreenEntry {
 	
 	private int postId;
@@ -12,6 +15,14 @@ public class GreenEntry {
 	private int numOfStars;
 	
 	
+	public GreenEntry(int userid_posted, String postTypeString, String postMsg, Blob blob, Date date) {
+		this.postedByUserId = userid_posted;
+		this.postType = postTypeString;
+		this.postMessage = postMsg;
+		this.postImageURL=blob.toString();
+		this.datePosted = date.toString();
+		// TODO Auto-generated constructor stub
+	}
 	public int getPostId() {
 		return postId;
 	}

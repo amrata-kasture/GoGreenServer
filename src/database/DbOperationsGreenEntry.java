@@ -78,33 +78,23 @@ public class DbOperationsGreenEntry {
 		return last_inserted_id;
 	}
 	
-	public ArrayList<String> ReadGreenEntry() {
-		ArrayList<String> arr = new ArrayList<String>();
+	public ArrayList<GreenEntry> ReadGreenEntry() {
+		ArrayList<GreenEntry> arr = new ArrayList<GreenEntry>();
 		Statement stmt;
 		try {
 			stmt = conn.createStatement();
+			props.load(in);
 			String query =  props.getProperty("READ_GR_ENTRY");
 			ResultSet rs = stmt.executeQuery(query);
-			ResultSetMetaData rsmd = rs.getMetaData();
-			int columnCount = rsmd.getColumnCount();
+			//ResultSetMetaData rsmd = rs.getMetaData();
+			//int columnCount = rsmd.getColumnCount();
 			while (rs.next())
 			{  
-				StringBuilder sb = new StringBuilder();
-				for (int i = 1; i <= columnCount; i++){ 
-					if(i<columnCount){
-					    sb.append(rs.getString(i)).append(",");
-					}else{
-						sb.append(rs.getString(i));	
-					}
-					if (i > 1) System.out.print(", ");
-					System.out.print(rs.getString(i));
-				}
-				arr.add(sb.toString());
-				System.out.println();
+				arr.add(new GreenEntry(rs.getInt("user_id"),rs.getString("type"),rs.getString("message"),rs.getBlob("picture"),rs.getDate("creation_date")));
 			}
 			rs.close();
 			stmt.close();
-		} catch (SQLException e) {
+		} catch (SQLException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

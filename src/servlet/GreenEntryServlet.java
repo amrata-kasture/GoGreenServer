@@ -71,14 +71,17 @@ public class GreenEntryServlet extends HttpServlet {
           
           DbOperationsGreenEntry dbOpGE = new DbOperationsGreenEntry(filename1, filename2);
           int geId = dbOpGE.AddGreenEntry(ge);
+          ge.setPostId(geId);
 		  
           OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
-          JSONObject jsonReturn = new JSONObject();
-          jsonReturn.put("greenEntryId", geId);
-          writer.write(jsonReturn.toString());
+          //JSONObject jsonReturn = new JSONObject();
+          //jsonReturn.put("greenEntryId", geId);
+          //writer.write(jsonReturn.toString());
+          String outString = mapper.writeValueAsString(ge); 
+          writer.write(outString);
           writer.flush();
           writer.close();
-        } catch (IOException | JSONException e) {
+        } catch (IOException e) {
           try{
         	  response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
               response.getWriter().print(e.getMessage());

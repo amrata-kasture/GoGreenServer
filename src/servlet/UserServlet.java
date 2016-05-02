@@ -38,10 +38,35 @@ public class UserServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
-		response.getOutputStream().println("Hurray !! UserServlet Works");
+//		response.getOutputStream().println("UserServlet Work STARTs");
+		JSONObject json = new JSONObject();
+        try {
+
+          ObjectMapper mapper = new ObjectMapper();
+          String filename1 = getServletContext().getRealPath("/DBConfig.properties");
+          String filename2 = getServletContext().getRealPath("/DBSetUp.dat");
+          String userId = request.getParameter("userId");
+          DbOperationsUser dbOpUser = new DbOperationsUser(filename1, filename2);
+          User resultUser = dbOpUser.GetUserDetailsFromUserId(Integer.parseInt(userId));
+          String outString = mapper.writeValueAsString(resultUser); 
+          OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
+          writer.write(outString);
+          writer.flush();
+          writer.close();
+          
+          response.getOutputStream().println("Hurray !! UserServlet Works END");
+        } catch (IOException e) {
+          try{
+        	  response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+              response.getWriter().print(e.getMessage());
+              response.getWriter().close();
+            } catch (IOException ioe) {
+
+            }
+        }
 		
 	}
 
@@ -75,15 +100,17 @@ public class UserServlet extends HttpServlet {
           
           DbOperationsUser dbOpUser = new DbOperationsUser(filename1, filename2);
           int userid = dbOpUser.AddUser(usr);
-		  
+          usr.setUserId(userid);
+          
           OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
-          JSONObject jsonReturn = new JSONObject();
-          jsonReturn.put("userId", userid);
-          writer.write(jsonReturn.toString());
- 
+          //JSONObject jsonReturn = new JSONObject();
+          //jsonReturn.put("userId", userid);
+          //writer.write(jsonReturn.toString());
+          String outString = mapper.writeValueAsString(usr); 
+          writer.write(outString);
           writer.flush();
           writer.close();
-        } catch (IOException | JSONException e) {
+        } catch (IOException e) {
           try{
         	  response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
               response.getWriter().print(e.getMessage());

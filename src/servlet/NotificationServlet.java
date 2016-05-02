@@ -69,14 +69,17 @@ public class NotificationServlet extends HttpServlet {
 	          
 	          DbOperationsNotification dbOpNotify = new DbOperationsNotification(filename1, filename2);
 	          int notificationid = dbOpNotify.AddNotification(n);
+	          n.setNotificationId(notificationid);
 			  
 	          OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
-	          JSONObject jsonReturn = new JSONObject();
-	          jsonReturn.put("notificationId", notificationid);
-	          writer.write(jsonReturn.toString());
+	          //JSONObject jsonReturn = new JSONObject();
+	          //jsonReturn.put("notificationId", notificationid);
+	          //writer.write(jsonReturn.toString());
+	          String outString = mapper.writeValueAsString(n); 
+	          writer.write(outString);
 	          writer.flush();
 	          writer.close();
-	        } catch (IOException | JSONException e) {
+	        } catch (IOException e) {
 	          try{
 	        	  response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 	              response.getWriter().print(e.getMessage());

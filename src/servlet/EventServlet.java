@@ -69,16 +69,19 @@ public class EventServlet extends HttpServlet {
 	          
 	          DbOperationsEvent dbOpEvent = new DbOperationsEvent(filename1, filename2);
 	          int eventid = dbOpEvent.AddEvent(e);
+	          e.setEventId(eventid);
 	          System.out.println("*************"+eventid);
 			  
 	          OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
-	          JSONObject jsonReturn = new JSONObject();
-	          jsonReturn.put("eventId", eventid);
-	          writer.write(jsonReturn.toString());
+	          //JSONObject jsonReturn = new JSONObject();
+	          //jsonReturn.put("eventId", eventid);
+	          //writer.write(jsonReturn.toString());
+	          String outString = mapper.writeValueAsString(e); 
+	          writer.write(outString);
 	          writer.flush();
 	        
 	          writer.close();
-	        } catch (IOException | JSONException e) {
+	        } catch (IOException e) {
 	          try{
 	        	  response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 	              response.getWriter().print(e.getMessage());

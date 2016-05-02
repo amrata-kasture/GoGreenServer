@@ -5,12 +5,12 @@ READ_USER =  Select * from user
 GET_USER_ROLE = Select user_type from user Where id = ? 
 GET_USERID_BY_UNAME = Select id from user Where user_name = ? 
 UPDATE_USER = Update user SET first_name = ? , last_name = ? , user_type = ?,user_interest = ?, city = ? , state = ?, picture = ? Where id = ?  
-
+GET_USER_DETAILS = Select * from user where id=?  
 DELETE_USER = Delete from user where id = ?
 
 GETIDRIGHT_GR_ENTRY = ALTER TABLE green_entry AUTO_INCREMENT=1
 ADD_GR_ENTRY = Insert IGNORE into green_entry (user_id, type, message, picture, creation_date) Values (?,?,?,?,NOW())
-READ_GR_ENTRY =  Select * from green_entry Where id = ? 
+READ_GR_ENTRY =  Select * from green_entry 
 READ_GR_ENTRY_USER =  Select * from green_entry Where user_id = ? 
 UPDATE_GR_ENTRY = Update green_entry SET message = ? Where id = ?  
 DELETE_GR_ENTRY = Delete from green_entry where id = ?

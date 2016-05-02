@@ -74,15 +74,15 @@ public class EditUserServlet extends HttpServlet {
           System.out.println("*************"+filename2);
           
           DbOperationsUser dbOpUser = new DbOperationsUser(filename1, filename2);
-          int userid = dbOpUser.UpdateUser(usr);
+          dbOpUser.UpdateUser(usr);
 		  
           OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
-          JSONObject jsonReturn = new JSONObject();
-          jsonReturn.put("userId", userid);
-          writer.write(jsonReturn.toString());
+          
+          String outString = mapper.writeValueAsString(usr);
+          writer.write(outString);
           writer.flush();
           writer.close();
-        } catch (IOException | JSONException e) {
+        } catch (IOException e) {
           try{
         	  response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
               response.getWriter().print(e.getMessage());
