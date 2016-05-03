@@ -18,6 +18,13 @@ public class GreenEntry {
 		
 	}
 	
+	public GreenEntry(int usr, String postTyp, String postMsg, String pic) {
+		this.postedByUserId=usr;
+		this.postType=postTyp;
+		this.postMessage=postMsg;
+		this.postImageURL=pic;
+	}
+	
 	
 	public GreenEntry(int postidInt,int userid_posted, String postTypeString, String postMsg, String blob, Date date) {
 		this.postId=postidInt;

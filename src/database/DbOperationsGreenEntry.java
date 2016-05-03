@@ -34,9 +34,9 @@ public class DbOperationsGreenEntry {
 	public DbOperationsGreenEntry(String filename1,String filename2){
 		try {
 			this.conn = DatabaseConnector.getConnection(filename1);
-			FileInputStream in = new FileInputStream(filename1);
+			FileInputStream fin = new FileInputStream(filename1);
 			Properties configProps = new Properties();
-			configProps.load(in);
+			configProps.load(fin);
 			Statement stmt=conn.createStatement(); 
 			String query = configProps.getProperty("USE_DB");
 			stmt.executeUpdate(query);
@@ -152,6 +152,36 @@ public class DbOperationsGreenEntry {
 					e.printStackTrace();
 				}
 		return res;
+	}
+	
+public ArrayList<GreenEntry> getAnswers(int questionId){
+		
+		ArrayList<GreenEntry> answers = new ArrayList<GreenEntry>();
+        
+		Statement stmt;
+		try {
+			stmt = conn.createStatement();
+			String query =  props.getProperty("GET_GR_ANSWERS");
+			PreparedStatement preparedStmt = conn.prepareStatement(query);
+			System.out.println(query);
+			preparedStmt.setInt (1, questionId);
+			ResultSet rs = preparedStmt.executeQuery();
+			//if (!rs.first()) return null;
+			while (rs.next())
+			{  
+			  GreenEntry ge = new GreenEntry(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getDate(6));
+			  answers.add(ge);
+			}
+			System.out.println();
+			rs.close();
+			stmt.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return answers;
+		
 	}
 	
 	public int DeleteGreenEntry(int id) {
