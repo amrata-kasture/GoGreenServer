@@ -31,7 +31,7 @@ public class DbOperationsShare {
 		Statement stmt;
 		try {
 			stmt = conn.createStatement();
-		
+			props.load(in);
 		String query =  props.getProperty("GETIDRIGHT_SHARE");
 		stmt.executeUpdate(query);
 		query =  props.getProperty("ADD_SHARE");
@@ -41,7 +41,7 @@ public class DbOperationsShare {
 		preparedStmt.setInt (2, gEntryId);
 		preparedStmt.execute();
 		stmt.close();
-		} catch (SQLException e1) {
+		} catch (SQLException | IOException e1) {
 			res=0;
 			e1.printStackTrace();
 		} 
@@ -53,6 +53,7 @@ public class DbOperationsShare {
 		Statement stmt;
 		try {
 			stmt = conn.createStatement();
+			props.load(in);
 			String query =  props.getProperty("READ_SHARE");
 			ResultSet rs = stmt.executeQuery(query);
 			ResultSetMetaData rsmd = rs.getMetaData();
@@ -74,7 +75,7 @@ public class DbOperationsShare {
 			}
 			rs.close();
 			stmt.close();
-		} catch (SQLException e) {
+		} catch (SQLException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -87,11 +88,12 @@ public class DbOperationsShare {
 		Statement stmt;
 		   try{
 			   stmt = conn.createStatement();
+			   props.load(in);
 			   String query =  props.getProperty("UPDATE_SHARE");
 			   query = query + " "+valLabel+" = '"+val+ "' where id = "+id;
 			   stmt.executeUpdate(query);
 			   stmt.close();
-				} catch (SQLException e) {
+				} catch (SQLException | IOException e) {
 					res=0;
 					e.printStackTrace();
 				}
@@ -103,12 +105,13 @@ public class DbOperationsShare {
 		Statement stmt;
 		try{
 			   stmt = conn.createStatement();
+			   props.load(in);
 			   String query =  props.getProperty("DELETE_SHARE");
 			   PreparedStatement preparedStmt = conn.prepareStatement(query);
 			   preparedStmt.setInt (1, id);
 			   preparedStmt.executeUpdate();
 			   stmt.close();
-		  } catch (SQLException e) {
+		  } catch (SQLException | IOException e) {
 				res=0;
 				e.printStackTrace();
 			}

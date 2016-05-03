@@ -32,6 +32,7 @@ public class DbOperationsPlant {
 		Statement stmt;
 		try {
 			stmt = conn.createStatement();
+			props.load(in);
 		
 		String query =  props.getProperty("GETIDRIGHT_PLANT");
 		stmt.executeUpdate(query);
@@ -44,7 +45,7 @@ public class DbOperationsPlant {
 		preparedStmt.setString (4, p.getPlantDescription());
 		preparedStmt.execute();
 		stmt.close();
-		} catch (SQLException e1) {
+		} catch (SQLException | IOException e1) {
 			res=0;
 			e1.printStackTrace();
 		} 
@@ -56,6 +57,7 @@ public class DbOperationsPlant {
 		Statement stmt;
 		try {
 			stmt = conn.createStatement();
+			props.load(in);
 			String query =  props.getProperty("READ_PLANT");
 			ResultSet rs = stmt.executeQuery(query);
 			ResultSetMetaData rsmd = rs.getMetaData();
@@ -77,7 +79,7 @@ public class DbOperationsPlant {
 			}
 			rs.close();
 			stmt.close();
-		} catch (SQLException e) {
+		} catch (SQLException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -89,11 +91,12 @@ public class DbOperationsPlant {
 		Statement stmt;
 		   try{
 			   stmt = conn.createStatement();
+			   props.load(in);
 			   String query =  props.getProperty("UPDATE_PLANT");
 			   query = query + " "+valLabel+" = '"+val+ "' where id = "+id;
 			   stmt.executeUpdate(query);
 			   stmt.close();
-				} catch (SQLException e) {
+				} catch (SQLException | IOException e) {
 					res=0;
 					e.printStackTrace();
 				}
@@ -105,12 +108,13 @@ public class DbOperationsPlant {
 		Statement stmt;
 		try{
 			   stmt = conn.createStatement();
+			   props.load(in);
 			   String query =  props.getProperty("DELETE_PLANT");
 			   PreparedStatement preparedStmt = conn.prepareStatement(query);
 			   preparedStmt.setInt (1, id);
 			   preparedStmt.executeUpdate();
 			   stmt.close();
-		  } catch (SQLException e) {
+		  } catch (SQLException | IOException e) {
 				res=0;
 				e.printStackTrace();
 			}

@@ -59,6 +59,7 @@ public class DbOperationsInterestArea {
 		Statement stmt;
 		try {
 			stmt = conn.createStatement();
+			props.load(in);
 			String query =  props.getProperty("READ_INTR_AREA");
 			ResultSet rs = stmt.executeQuery(query);
 			ResultSetMetaData rsmd = rs.getMetaData();
@@ -80,7 +81,7 @@ public class DbOperationsInterestArea {
 			}
 			rs.close();
 			stmt.close();
-		} catch (SQLException e) {
+		} catch (SQLException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -104,11 +105,12 @@ public class DbOperationsInterestArea {
 		Statement stmt;
 		   try{
 			   stmt = conn.createStatement();
+			   props.load(in);
 			   String query =  props.getProperty("UPDATE_EVENT");
 			   query = query + " "+valLabel+" = '"+val+ "' where id = "+id;
 			   stmt.executeUpdate(query);
 			   stmt.close();
-				} catch (SQLException e) {
+				} catch (SQLException | IOException e) {
 					res=0;
 					e.printStackTrace();
 				}
@@ -120,12 +122,13 @@ public class DbOperationsInterestArea {
 		Statement stmt;
 		try{
 			   stmt = conn.createStatement();
+			   props.load(in);
 			   String query =  props.getProperty("DELETE_INTR_AREA");
 			   PreparedStatement preparedStmt = conn.prepareStatement(query);
 			   preparedStmt.setInt (1, id);
 			   preparedStmt.executeUpdate();
 			   stmt.close();
-		  } catch (SQLException e) {
+		  } catch (SQLException | IOException e) {
 				res=0;
 				e.printStackTrace();
 			}

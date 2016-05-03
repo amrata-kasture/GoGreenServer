@@ -1,4 +1,4 @@
-package model;
+package servlet;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -14,6 +14,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import database.DbOperationsEvent;
 import database.DbOperationsGreenEntry;
+import model.GreenEntry;
 
 /**
  * Servlet implementation class TimelineServlet

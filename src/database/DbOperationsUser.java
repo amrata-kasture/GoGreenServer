@@ -87,6 +87,7 @@ public class DbOperationsUser {
 		Statement stmt;
 		try {
 			stmt = conn.createStatement();
+			props.load(in);
 			String query =  props.getProperty("READ_USER");
 			ResultSet rs = stmt.executeQuery(query);
 			ResultSetMetaData rsmd = rs.getMetaData();
@@ -108,7 +109,7 @@ public class DbOperationsUser {
 			}
 			rs.close();
 			stmt.close();
-		} catch (SQLException e) {
+		} catch (SQLException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -118,6 +119,7 @@ public class DbOperationsUser {
 	public String GetUserRole(int id){
 		String role = "";
 		   try{
+			   props.load(in);
 			   String query =  props.getProperty("GET_USER_ROLE");
 			   PreparedStatement preparedStmt = conn.prepareStatement(query);
 			   preparedStmt.setInt (1, id);
@@ -125,7 +127,7 @@ public class DbOperationsUser {
 			   if (rs.next()) {
 				   role = rs.getString(1);
 			   }
-				} catch (SQLException e) {
+				} catch (SQLException | IOException e) {
 					e.printStackTrace();
 				}
 		return role;
@@ -182,6 +184,8 @@ public class DbOperationsUser {
 					   System.out.println("************ rs="+rs.getString(9));
 					   System.out.println("************ rs="+rs.getBinaryStream(10));
 					   user.setUserId(rs.getInt(1));
+					   user.setUsername(rs.getString(2));
+					   user.setPassword(rs.getString(3));
 					   user.setFirstName(rs.getString(4));
 					   user.setLastName(rs.getString(5));
 					   user.setRoleId(rs.getString(6));
@@ -266,12 +270,13 @@ public class DbOperationsUser {
 		Statement stmt;
 		try{
 			   stmt = conn.createStatement();
+			   props.load(in);
 			   String query =  props.getProperty("DELETE_USER");
 			   PreparedStatement preparedStmt = conn.prepareStatement(query);
 			   preparedStmt.setInt (1, id);
 			   preparedStmt.executeUpdate();
 			   stmt.close();
-		  } catch (SQLException e) {
+		  } catch (SQLException | IOException e) {
 				res=0;
 				e.printStackTrace();
 			}

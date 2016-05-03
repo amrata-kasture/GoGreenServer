@@ -14,8 +14,12 @@ public class GreenEntry {
 	private int numOfShares;
 	private int numOfStars;
 	
+	public GreenEntry(){
+		
+	}
 	
-	public GreenEntry(int postidInt,int userid_posted, String postTypeString, String postMsg, Blob blob, Date date) {
+	
+	public GreenEntry(int postidInt,int userid_posted, String postTypeString, String postMsg, String blob, Date date) {
 		this.postId=postidInt;
 		this.postedByUserId = userid_posted;
 		this.postType = postTypeString;
@@ -72,4 +76,14 @@ public class GreenEntry {
 	public void setNumOfStars(int numOfStars) {
 		this.numOfStars = numOfStars;
 	}
+
+
+	@Override
+	public String toString() {
+		return "GreenEntry [postId=" + postId + ", postedByUserId=" + postedByUserId + ", postType=" + postType
+				+ ", postMessage=" + postMessage + ", datePosted=" + datePosted + ", postImageURL=" + postImageURL
+				+ ", numOfShares=" + numOfShares + ", numOfStars=" + numOfStars + "]";
+	}
+	
+	
 }

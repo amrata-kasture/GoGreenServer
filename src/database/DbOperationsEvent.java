@@ -86,6 +86,7 @@ public class DbOperationsEvent {
 		Statement stmt;
 		try {
 			stmt = conn.createStatement();
+			props.load(in);
 			String query =  props.getProperty("READ_EVENT");
 			ResultSet rs = stmt.executeQuery(query);
 			ResultSetMetaData rsmd = rs.getMetaData();
@@ -107,7 +108,7 @@ public class DbOperationsEvent {
 			}
 			rs.close();
 			stmt.close();
-		} catch (SQLException e) {
+		} catch (SQLException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -119,13 +120,14 @@ public class DbOperationsEvent {
 		Statement stmt;
 	   try{
 		   stmt = conn.createStatement();
+		   props.load(in);
 		   String query =  props.getProperty("UPDATE_EVENT");
 		   query = query + " "+valLabel+" = '"+val+ "' where id = "+id;
 		   //PreparedStatement preparedStmt = conn.prepareStatement(query);
 		   //preparedStmt.executeUpdate();
 		   stmt.executeUpdate(query);
 		   stmt.close();
-			} catch (SQLException e) {
+			} catch (SQLException | IOException e) {
 				res=0;
 				e.printStackTrace();
 			}
@@ -138,12 +140,13 @@ public class DbOperationsEvent {
 		Statement stmt;
 		try{
 			   stmt = conn.createStatement();
+			   props.load(in);
 			   String query =  props.getProperty("DELETE_EVENT");
 			   PreparedStatement preparedStmt = conn.prepareStatement(query);
 			   preparedStmt.setInt (1, id);
 			   preparedStmt.executeUpdate();
 			   stmt.close();
-		  } catch (SQLException e) {
+		  } catch (SQLException | IOException e) {
 				res=0;
 				e.printStackTrace();
 			}

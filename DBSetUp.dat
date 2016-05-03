@@ -46,6 +46,7 @@ READ_INTR_AREA =  Select * from interest_area Where id = ?
 UPDATE_INTR_AREA = Update interest_area SET description = ? Where id = ?  
 UPDATE_INTR_AREA = Update interest_area SET  
 DELETE_INTR_AREA = Delete from interest_area where id = ?
+GET_INTEREST_AREA = select category from interest_area where id=?
 
 
 GETIDRIGHT_FOLLOWING = ALTER TABLE following AUTO_INCREMENT=1

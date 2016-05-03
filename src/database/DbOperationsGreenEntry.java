@@ -1,6 +1,9 @@
 package database;
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -89,8 +92,12 @@ public class DbOperationsGreenEntry {
 			//ResultSetMetaData rsmd = rs.getMetaData();
 			//int columnCount = rsmd.getColumnCount();
 			while (rs.next())
-			{  
-				arr.add(new GreenEntry(rs.getInt("id"),rs.getInt("user_id"),rs.getString("type"),rs.getString("message"),rs.getBlob("picture"),rs.getDate("creation_date")));
+			{   
+			    InputStream is = null;
+					if(rs.getBinaryStream("picture")!=null){
+					   is = rs.getBinaryStream("picture");
+				   }
+				arr.add(new GreenEntry(rs.getInt("id"),rs.getInt("user_id"),rs.getString("type"),rs.getString("message"),getStringFromInputStream(is),rs.getDate("creation_date")));
 			}
 			rs.close();
 			stmt.close();
@@ -107,11 +114,12 @@ public class DbOperationsGreenEntry {
 		Statement stmt;
 		   try{
 			   stmt = conn.createStatement();
+			   props.load(in);
 			   String query =  props.getProperty("UPDATE_GR_ENTRY");
 			   query = query + " "+valLabel+" = '"+val+ "' where id = "+id;
 			   stmt.executeUpdate(query);
 			   stmt.close();
-				} catch (SQLException e) {
+				} catch (SQLException | IOException e) {
 					res=0;
 					e.printStackTrace();
 				}
@@ -123,17 +131,48 @@ public class DbOperationsGreenEntry {
 		Statement stmt;
 		try{
 			   stmt = conn.createStatement();
+			   props.load(in);
 			   String query =  props.getProperty("DELETE_GR_ENTRY");
 			   PreparedStatement preparedStmt = conn.prepareStatement(query);
 			   preparedStmt.setInt (1, id);
 			   preparedStmt.executeUpdate();
 			   stmt.close();
-		  } catch (SQLException e) {
+		  } catch (SQLException | IOException e) {
 				res=0;
 				e.printStackTrace();
 			}
 		return res;
 	}
+	
+	private static String getStringFromInputStream(InputStream is) {
+
+		BufferedReader br = null;
+		StringBuilder sb = new StringBuilder();
+
+		String line;
+		try {
+
+			br = new BufferedReader(new InputStreamReader(is));
+			while ((line = br.readLine()) != null) {
+				sb.append(line);
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return sb.toString();
+
+	}
+
 	
 	public void destroy(){
 		try {

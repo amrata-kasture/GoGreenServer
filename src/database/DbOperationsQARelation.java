@@ -32,6 +32,7 @@ public class DbOperationsQARelation {
 		Statement stmt;
 		try {
 			stmt = conn.createStatement();
+			props.load(in);
 		
 		String query =  props.getProperty("GETIDRIGHT_QA_REL");
 		stmt.executeUpdate(query);
@@ -42,7 +43,7 @@ public class DbOperationsQARelation {
 		preparedStmt.setInt (2, AId);
 		preparedStmt.execute();
 		stmt.close();
-		} catch (SQLException e1) {
+		} catch (SQLException | IOException e1) {
 			res=0;
 			e1.printStackTrace();
 		} 
@@ -54,6 +55,7 @@ public class DbOperationsQARelation {
 		Statement stmt;
 		try {
 			stmt = conn.createStatement();
+			props.load(in);
 			String query =  props.getProperty("READ_QA_REL");
 			ResultSet rs = stmt.executeQuery(query);
 			ResultSetMetaData rsmd = rs.getMetaData();
@@ -75,7 +77,7 @@ public class DbOperationsQARelation {
 			}
 			rs.close();
 			stmt.close();
-		} catch (SQLException e) {
+		} catch (SQLException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -87,13 +89,14 @@ public class DbOperationsQARelation {
 		Statement stmt;
 		   try{
 			   stmt = conn.createStatement();
+			   props.load(in);
 			   String query =  props.getProperty("UPDATE_QA_REL");
 			   query = query + " "+valLabel+" = '"+val+ "' where id = "+id;
 			   //PreparedStatement preparedStmt = conn.prepareStatement(query);
 			   //preparedStmt.executeUpdate();
 			   stmt.executeUpdate(query);
 			   stmt.close();
-				} catch (SQLException e) {
+				} catch (SQLException | IOException e) {
 					res=0;
 					e.printStackTrace();
 				}
@@ -105,12 +108,13 @@ public class DbOperationsQARelation {
 		Statement stmt;
 		try{
 			   stmt = conn.createStatement();
+			   props.load(in);
 			   String query =  props.getProperty("DELETE_QA_REL");
 			   PreparedStatement preparedStmt = conn.prepareStatement(query);
 			   preparedStmt.setInt (1, id);
 			   preparedStmt.executeUpdate();
 			   stmt.close();
-		  } catch (SQLException e) {
+		  } catch (SQLException | IOException e) {
 				res=0;
 				e.printStackTrace();
 			}
