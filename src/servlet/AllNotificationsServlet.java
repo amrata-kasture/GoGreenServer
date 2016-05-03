@@ -12,21 +12,20 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.codehaus.jackson.map.ObjectMapper;
 
-import database.DbOperationsEvent;
-import database.DbOperationsGreenEntry;
-import model.GreenEntry;
+import database.DbOperationsNotification;
+import model.Notification;
 
 /**
- * Servlet implementation class TimelineServlet
+ * Servlet implementation class AllNotificationsServlet
  */
-@WebServlet("/TimelineServlet")
-public class TimelineServlet extends HttpServlet {
+@WebServlet("/AllNotificationsServlet")
+public class AllNotificationsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public TimelineServlet() {
+    public AllNotificationsServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -36,32 +35,23 @@ public class TimelineServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		//response.getOutputStream().println("Hurray !! TimelineServlet Works");
-		ArrayList<GreenEntry> arrGE = new ArrayList<GreenEntry>();
+		//response.getWriter().append("Served at: ").append(request.getContextPath());
+		ArrayList<Notification> arrNotif = new ArrayList<Notification>();
 		String filename1 = getServletContext().getRealPath("/DBConfig.properties");
         String filename2 = getServletContext().getRealPath("/DBSetUp.dat");
         System.out.println("*************"+filename1);
         System.out.println("*************"+filename2);
         
-        String operation = request.getParameter("opId");
-        int op = Integer.parseInt(operation);
-        
-        DbOperationsGreenEntry dbOpGE = new DbOperationsGreenEntry(filename1, filename2);
-        if(op==1){
-       	  arrGE= dbOpGE.ReadBlogGreenEntry();
-         }
-         else if(op==2){
-          arrGE= dbOpGE.ReadQuestionGreenEntry();
-         }
-        
-        System.out.println("*************"+arrGE.toString());
+        DbOperationsNotification dbOpN = new DbOperationsNotification(filename1, filename2);
+        arrNotif= dbOpN.ReadNotification();
+        System.out.println("*************"+arrNotif.toString());
 		  
         OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
         //JSONObject jsonReturn = new JSONObject();
         //jsonReturn.put("eventId", eventid);
         //writer.write(jsonReturn.toString());
         ObjectMapper mapper = new ObjectMapper();
-        String outString = mapper.writeValueAsString(arrGE); 
+        String outString = mapper.writeValueAsString(arrNotif); 
         writer.write(outString);
         writer.flush();
         writer.close();

@@ -11,6 +11,8 @@ DELETE_USER = Delete from user where id = ?
 GETIDRIGHT_GR_ENTRY = ALTER TABLE green_entry AUTO_INCREMENT=1
 ADD_GR_ENTRY = Insert IGNORE into green_entry (user_id, type, message, picture, creation_date) Values (?,?,?,?,NOW())
 READ_GR_ENTRY =  Select * from green_entry 
+READ_BLOG_GR_ENTRY = Select * from green_entry where type = 'Blog'
+READ_QUESTION_GR_ENTRY = Select * from green_entry where type = 'Question'
 READ_GR_ENTRY_USER =  Select * from green_entry Where user_id = ? 
 UPDATE_GR_ENTRY = Update green_entry SET message = ? Where id = ?  
 DELETE_GR_ENTRY = Delete from green_entry where id = ?
@@ -34,10 +36,12 @@ DELETE_EVENT = Delete from event where id = ?
 
 GETIDRIGHT_NOTIFICATION = ALTER TABLE notification AUTO_INCREMENT=1
 ADD_NOTIFICATION = Insert IGNORE into notification (green_entry_id, event_id, notification_msg, creation_date) Values (?,?,?,NOW())
-READ_NOTIFICATION =  Select * from notification Where id = ? 
+READ_NOTIFICATION =  Select * from notification
 UPDATE_NOTIFICATION = Update notification SET notification_message = ? Where id = ? 
 UPDATE_NOTIFICATION = Update notification SET 
 DELETE_NOTIFICATION = Delete from notification where id = ?
+GET_A_NOTIFICATION = Select * from notification where id = ?
+
 
 
 GETIDRIGHT_INTR_AREA = ALTER TABLE interest_area AUTO_INCREMENT=1

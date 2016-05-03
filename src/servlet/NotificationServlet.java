@@ -17,6 +17,7 @@ import org.codehaus.jettison.json.JSONObject;
 import database.DbOperationsNotification;
 import model.Notification;
 
+
 /**
  * Servlet implementation class NotificationServlet
  */
@@ -37,7 +38,32 @@ public class NotificationServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getOutputStream().println("Hurray !! NotificationServlet Works");
+		//response.getOutputStream().println("Hurray !! NotificationServlet Works");
+		JSONObject json = new JSONObject();
+        try {
+
+          ObjectMapper mapper = new ObjectMapper();
+          String filename1 = getServletContext().getRealPath("/DBConfig.properties");
+          String filename2 = getServletContext().getRealPath("/DBSetUp.dat");
+          String notifId = request.getParameter("Id");
+          DbOperationsNotification dbOpN = new DbOperationsNotification(filename1, filename2);
+          Notification resultOneNotif = dbOpN.GetNotifDetailsById(Integer.parseInt(notifId));
+          String outString = mapper.writeValueAsString(resultOneNotif); 
+          OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
+          writer.write(outString);
+          writer.flush();
+          writer.close();
+          
+          response.getOutputStream().println("Hurray !! UserServlet Works END");
+        } catch (IOException e) {
+          try{
+        	  response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+              response.getWriter().print(e.getMessage());
+              response.getWriter().close();
+            } catch (IOException ioe) {
+
+            }
+        }
 	}
 
 	/**

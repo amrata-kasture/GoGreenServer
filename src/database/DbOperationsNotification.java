@@ -1,6 +1,7 @@
 package database;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -75,40 +76,48 @@ public class DbOperationsNotification {
 		return last_inserted_id;
 	}
 	
-	public ArrayList<String> ReadNotification() {
-		ArrayList<String> arr = new ArrayList<String>();
+	public ArrayList<Notification> ReadNotification() {
+		ArrayList<Notification> arr = new ArrayList<Notification>();
 		Statement stmt;
 		try {
 			stmt = conn.createStatement();
 			props.load(in);
 			String query =  props.getProperty("READ_NOTIFICATION");
 			ResultSet rs = stmt.executeQuery(query);
-			ResultSetMetaData rsmd = rs.getMetaData();
-			int columnCount = rsmd.getColumnCount();
 			while (rs.next())
-			{  
-				StringBuilder sb = new StringBuilder();
-				for (int i = 1; i <= columnCount; i++){ 
-					if(i<columnCount){
-					    sb.append(rs.getString(i)).append(",");
-					}else{
-						sb.append(rs.getString(i));	
-					}
-					if (i > 1) System.out.print(", ");
-					System.out.print(rs.getString(i));
-				}
-				arr.add(sb.toString());
-				System.out.println();
+			{   
+				arr.add(new Notification(rs.getInt("id"),rs.getInt("green_entry_id"),rs.getInt("event_id"),rs.getString("notification_msg"),rs.getDate("creation_date")));
 			}
 			rs.close();
 			stmt.close();
 		} catch (SQLException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		  
+		}		  
 		return arr;
 	}
+	
+	
+	public Notification GetNotifDetailsById(int notifId){
+		Notification nf = new Notification();
+		   try{
+			   props.load(in);
+			   String query =  props.getProperty("GET_A_NOTIFICATION");
+			   int interestArea = 0;
+			   PreparedStatement preparedStmt = conn.prepareStatement(query);
+			   preparedStmt.setInt (1, notifId);
+			   ResultSet rs = preparedStmt.executeQuery();
+			   if (rs.next()) {
+				   nf = new Notification(rs.getInt("id"),rs.getInt("green_entry_id"),rs.getInt("event_id"),rs.getString("notification_msg"),rs.getDate("creation_date"));
+			   }
+			   rs.close();
+			   preparedStmt.close();
+			} catch (SQLException | IOException e) {
+				e.printStackTrace();
+			}
+		return nf;
+	}
+
 	
 	public int UpdateNotification(int id, String valLabel, String val) {
 		int res = 1;

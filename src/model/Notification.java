@@ -1,5 +1,7 @@
 package model;
 
+import java.sql.Date;
+
 public class Notification {
 	private int notificationId;
 	private GreenEntry postNote;
@@ -9,7 +11,19 @@ public class Notification {
 	private int greenEntryId;
 	private int eventId;
 	
-	 public int getNotificationId() {
+	public Notification(){
+		
+	}
+	
+	 public Notification(int notificationId, int greenEntryId, int eventId, String notificationMessage, Date notificationDate) {
+		this.notificationId = notificationId;
+		this.greenEntryId = greenEntryId;
+		this.eventId = eventId;
+		this.notificationMessage = notificationMessage;
+		this.notificationDate = notificationDate.toString();
+	}
+
+	public int getNotificationId() {
 	        return notificationId;
 	 }
 

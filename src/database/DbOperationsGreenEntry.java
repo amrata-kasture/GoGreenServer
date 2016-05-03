@@ -81,13 +81,41 @@ public class DbOperationsGreenEntry {
 		return last_inserted_id;
 	}
 	
-	public ArrayList<GreenEntry> ReadGreenEntry() {
+	public ArrayList<GreenEntry> ReadBlogGreenEntry() {
 		ArrayList<GreenEntry> arr = new ArrayList<GreenEntry>();
 		Statement stmt;
 		try {
 			stmt = conn.createStatement();
 			props.load(in);
-			String query =  props.getProperty("READ_GR_ENTRY");
+			String query =  props.getProperty("READ_BLOG_GR_ENTRY");
+			ResultSet rs = stmt.executeQuery(query);
+			//ResultSetMetaData rsmd = rs.getMetaData();
+			//int columnCount = rsmd.getColumnCount();
+			while (rs.next())
+			{   
+			    InputStream is = null;
+					if(rs.getBinaryStream("picture")!=null){
+					   is = rs.getBinaryStream("picture");
+				   }
+				arr.add(new GreenEntry(rs.getInt("id"),rs.getInt("user_id"),rs.getString("type"),rs.getString("message"),getStringFromInputStream(is),rs.getDate("creation_date")));
+			}
+			rs.close();
+			stmt.close();
+		} catch (SQLException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return arr;
+	}
+	
+	public ArrayList<GreenEntry> ReadQuestionGreenEntry() {
+		ArrayList<GreenEntry> arr = new ArrayList<GreenEntry>();
+		Statement stmt;
+		try {
+			stmt = conn.createStatement();
+			props.load(in);
+			String query =  props.getProperty("READ_QUESTION_GR_ENTRY");
 			ResultSet rs = stmt.executeQuery(query);
 			//ResultSetMetaData rsmd = rs.getMetaData();
 			//int columnCount = rsmd.getColumnCount();
