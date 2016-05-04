@@ -34,9 +34,9 @@ public class DbOperationsGreenEntry {
 	public DbOperationsGreenEntry(String filename1,String filename2){
 		try {
 			this.conn = DatabaseConnector.getConnection(filename1);
-			FileInputStream in = new FileInputStream(filename1);
+			FileInputStream fin = new FileInputStream(filename1);
 			Properties configProps = new Properties();
-			configProps.load(in);
+			configProps.load(fin);
 			Statement stmt=conn.createStatement(); 
 			String query = configProps.getProperty("USE_DB");
 			stmt.executeUpdate(query);
@@ -208,6 +208,58 @@ public class DbOperationsGreenEntry {
 			}
 		return res;
 	}
+	
+	public ArrayList<GreenEntry> getAnswers(int questionId){
+		 		
+		 		ArrayList<GreenEntry> answers = new ArrayList<GreenEntry>();
+		         
+		 		Statement stmt;
+		 		try {
+		 			stmt = conn.createStatement();
+		 			String query =  props.getProperty("GET_GR_ANSWERS");
+		 			PreparedStatement preparedStmt = conn.prepareStatement(query);
+		 			System.out.println(query);
+		 			preparedStmt.setInt (1, questionId);
+		 			ResultSet rs = preparedStmt.executeQuery();
+		 			//if (!rs.first()) return null;
+		 			while (rs.next())
+		 			{  
+		 			  String temp = "";
+						InputStream tempPic = null;
+						String qry =  props.getProperty("GET_NAME_N_PIC_BY_UID");
+						PreparedStatement prepStmt = conn.prepareStatement(qry);
+						preparedStmt.setInt (1, rs.getInt("user_id"));
+						ResultSet tempRset = preparedStmt.executeQuery();
+						if(tempRset.next())
+				        {
+				            temp = tempRset.getString("first_name") + " " + tempRset.getString("last_name");
+				            System.out.println("$$$$$$$$$$$$$"+temp);
+				            if(tempRset.getString("picture")!=null){
+				            	tempPic = tempRset.getBinaryStream("picture");
+							   }
+				        }
+					    InputStream is = null;
+							if(rs.getBinaryStream("picture")!=null){
+							   is = rs.getBinaryStream("picture");
+						   }
+		GreenEntry ge =new GreenEntry(rs.getInt("id"),rs.getInt("user_id"),temp,rs.getString("type"),rs.getString("message"),getStringFromInputStream(is),getStringFromInputStream(tempPic),rs.getDate("creation_date"));		
+		 //GreenEntry ge = new GreenEntry(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getDate(6));
+		 			  
+		 			  answers.add(ge);
+		 			}
+		 			System.out.println();
+		 			rs.close();
+		 			stmt.close();
+		 		} catch (SQLException e) {
+		 			// TODO Auto-generated catch block
+		 			e.printStackTrace();
+		 		}
+		 		
+		 		return answers;
+		 		
+		 	}
+		 	
+	
 	
 	private static String getStringFromInputStream(InputStream is) {
 

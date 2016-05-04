@@ -33,7 +33,12 @@ public class GreenEntry {
 		// TODO Auto-generated constructor stub
 	}
 	
-	
+	public GreenEntry(int usr, String postTyp, String postMsg, String pic) {
+		 	this.postedByUserId=usr;
+		 	this.postType=postTyp;
+		 		this.postMessage=postMsg;
+		 		this.postImageURL=pic;
+		 	}
 	
 	public String getUserImage() {
 		return userImage;

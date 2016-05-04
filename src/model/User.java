@@ -39,6 +39,19 @@ public class User {
 	    	this.followingNum = 0;
 	    	this.imageURL =imageURL;
 	    }
+	    
+	    public User(int uid, String fn, String ln){
+	    	 	    	this.userId=uid;
+	    		        this.firstName=fn;
+	    	 	        this.lastName=ln;
+	    	 	    }
+	    	 	    
+	    	 	    public User(int uid, String fn, String ln, String rt){
+	    	 	    	this.userId=uid;
+	    	 	        this.firstName=fn;
+	    	 	        this.lastName=ln;
+	    	 	        this.roleType=rt;
+	    	 	    }
 	
 	public int getUserId() {
 		return userId;
