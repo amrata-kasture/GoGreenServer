@@ -27,6 +27,19 @@ public class User {
 	        imageURL ="";
 	    }
 	 
+	 	public User(int uid, String fn, String ln){
+	    	this.userId=uid;
+	        this.firstName=fn;
+	        this.lastName=ln;
+	    }
+	    
+	    public User(int uid, String fn, String ln, String rt){
+	    	this.userId=uid;
+	        this.firstName=fn;
+	        this.lastName=ln;
+	        this.roleType=rt;
+	    }
+	 
 	    public User(String username, String firstName, String lastName, String roleType,String interestArea, String city, String state, String imageURL) {
 	    	this.username = username;
 	    	this.firstName = firstName;

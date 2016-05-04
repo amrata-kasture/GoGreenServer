@@ -17,7 +17,12 @@ READ_GR_ENTRY =  Select * from green_entry
 READ_BLOG_GR_ENTRY = Select * from green_entry where type = 'Blog'
 READ_QUESTION_GR_ENTRY = Select * from green_entry where type = 'Question'
 READ_GR_ENTRY_USER =  Select * from green_entry Where user_id = ?
+
 GET_GR_ANSWERS = select * from green_entry where type="Answer" and id in (SELECT distinct answer_id FROM gogreendatabase.question_answer_relation where question_id= ? ) order by creation_date; 
+
+GET_GR_ANSWERS = select * from green_entry where type="Answer" and id in (SELECT distinct answer_id \
+FROM gogreendatabase.question_answer_relation where question_id= ? ) order by creation_date; 
+
 UPDATE_GR_ENTRY = Update green_entry SET message = ? Where id = ?  
 DELETE_GR_ENTRY = Delete from green_entry where id = ?
 
@@ -61,10 +66,18 @@ GETIDRIGHT_FOLLOWING = ALTER TABLE following AUTO_INCREMENT=1
 ADD_FOLLOWING = Insert IGNORE into following (followed_id, follower_id, creation_date) Values (?,?,NOW())
 READ_FOLLOWING =  Select * from following Where id = ? 
 READ_FOLLOWED_COUNT = Select count(1) from following Where followed_id = ? 
+
 READ_FOLLOWING_COUNT = Select count(1) from following Where follower_id = ? 
 READ_FOLLOWING_COUNT = Select count(1) from following Where follower_id = ?
 GET_FOLLOWING = select user.id, first_name, last_name, user_type, user_interest, picture from following inner join user on followed_id = user.id where follower_id= ?
 GET_FOLLOWERS = select user.id, first_name, last_name, user_type, user_interest, picture from following inner join user on follower_id = user.id where followed_id= ?
+
+READ_FOLLOWING_COUNT = Select count(1) from following Where follower_id = ?
+GET_FOLLOWING = select user.id, first_name, last_name, user_type, user_interest, picture from following \
+inner join user on followed_id = user.id where follower_id= ?
+GET_FOLLOWERS = select user.id, first_name, last_name, user_type, user_interest, picture from following \
+inner join user on follower_id = user.id where followed_id= ?
+
 CHK_FOLLOWING = SELECT COUNT(*) as "Count" FROM gogreendatabase.following where followed_id=? And follower_id=? 
 
 UPDATE_FOLLOWING = Update following SET follower_id = ? Where id = ?  

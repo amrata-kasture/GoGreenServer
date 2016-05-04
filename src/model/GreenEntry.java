@@ -13,11 +13,33 @@ public class GreenEntry {
 	private String postImageURL;
 	private int numOfShares;
 	private int numOfStars;
+
 	private String postByUserName;
 	private String userImage;
+
+	private int questionIdForAnswers;
+
 	
 	public GreenEntry(){
 		
+	}
+	
+	public GreenEntry(int pid){
+		this.postId=pid;
+	}
+	
+	public GreenEntry(int pid, String postType){
+		this.postId=pid;
+		this.postType=postType;
+	}
+	
+	
+	public GreenEntry(int qid, int usr, String postTyp, String postMsg, String pic) {
+		this.questionIdForAnswers=qid;
+		this.postedByUserId=usr;
+		this.postType=postTyp;
+		this.postMessage=postMsg;
+		this.postImageURL=pic;
 	}
 	
 	
@@ -33,6 +55,7 @@ public class GreenEntry {
 		// TODO Auto-generated constructor stub
 	}
 	
+
 	public GreenEntry(int usr, String postTyp, String postMsg, String pic) {
 		 	this.postedByUserId=usr;
 		 	this.postType=postTyp;
@@ -60,11 +83,30 @@ public class GreenEntry {
 	}
 
 
+
+	public GreenEntry(int qid, int postidInt,int userid_posted, String postTypeString, String postMsg, String blob, Date date) {
+		this.questionIdForAnswers=qid;
+		this.postId=postidInt;
+		this.postedByUserId = userid_posted;
+		this.postType = postTypeString;
+		this.postMessage = postMsg;
+		this.postImageURL=blob.toString();
+		this.datePosted = date.toString();
+		// TODO Auto-generated constructor stub
+	}
+	
+
 	public int getPostId() {
 		return postId;
 	}
 	public void setPostId(int postId) {
 		this.postId = postId;
+	}
+	public int getQuestionIdForAnswers() {
+		return questionIdForAnswers;
+	}
+	public void setQuestionIdForAnswers(int qId) {
+		this.questionIdForAnswers = qId;
 	}
 	public int getPostedByUserId() {
 		return postedByUserId;
