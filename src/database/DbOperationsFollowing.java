@@ -204,6 +204,24 @@ public class DbOperationsFollowing {
 		return res;
 	}
 	
+	public int DeleteFollowing(int followedId,int followerId) {
+		int res = 1;
+		Statement stmt;
+		try{
+			   stmt = conn.createStatement();
+			   String query =  props.getProperty("DELETE_A_FOLLOWING");
+			   PreparedStatement preparedStmt = conn.prepareStatement(query);
+			   preparedStmt.setInt (1, followerId);
+			   preparedStmt.setInt (2, followedId);
+			   preparedStmt.executeUpdate();
+			   stmt.close();
+		  } catch (SQLException e) {
+				res=0;
+				e.printStackTrace();
+			}
+		return res;
+	}
+	
 	public void destroy(){
 		try {
 			conn.close();

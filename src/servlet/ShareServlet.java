@@ -17,6 +17,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 import database.DbOperationsFollowing;
 import database.DbOperationsShare;
+import model.Share;
 import model.User;
 
 /**
@@ -47,7 +48,7 @@ public class ShareServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
+		ObjectMapper mapper = new ObjectMapper();
 		try {
             int length = request.getContentLength();
             byte[] input = new byte[length];
@@ -60,11 +61,9 @@ public class ShareServlet extends HttpServlet {
           sin.close();
           jsonString = new String(input);
           System.out.println(jsonString);
-          JSONObject json = new JSONObject(jsonString);
-          int usr = json.getInt("userId");
-          int post = json.getInt("postId");
-          
-          System.out.println("User ID:"+usr + "post" + post);
+          Share s = mapper.readValue(jsonString, Share.class);
+          int usr = s.getUserId();
+          int post = s.getPostId();
           
           String filename1 = getServletContext().getRealPath("/DBConfig.properties");
           String filename2 = getServletContext().getRealPath("/DBSetUp.dat");
@@ -73,17 +72,18 @@ public class ShareServlet extends HttpServlet {
           DbOperationsShare dbOpShare = new DbOperationsShare(filename1, filename2);
           int done = dbOpShare.AddShare(usr, post);
           
-          ObjectMapper mapper = new ObjectMapper();
-          String jsonshare = mapper.writeValueAsString(done);
-          System.out.println(jsonshare);
+          if(done==0){
+        	  s.setPostId(0);
+        	  s.setUserId(0);
+          }
+          
+          String jsonshare = mapper.writeValueAsString(s);
           OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
-          JSONObject sendshare = new JSONObject();
-          sendshare.put("Done", jsonshare);
       
-          writer.write(sendshare.toString());
+          writer.write(jsonshare);
           writer.flush();
           writer.close();
-        } catch (IOException | JSONException e) {
+        } catch (IOException e) {
           try{
         	  response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
               response.getWriter().print(e.getMessage());

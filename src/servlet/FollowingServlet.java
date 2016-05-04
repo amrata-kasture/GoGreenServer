@@ -17,6 +17,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 import database.DbOperationsFollowing;
 import database.DbOperationsUser;
+import model.Following;
 import model.User;
 
 /**
@@ -64,18 +65,12 @@ public class FollowingServlet extends HttpServlet {
 	          String jsonfollowing = mapper.writeValueAsString(follow);
 	          System.out.println(jsonfollowing);
 	          OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
-	          JSONObject sendfollowing = new JSONObject();
-	          if (op==1){
-	        	  sendfollowing.put("Following", jsonfollowing); 
-	          }
-	          else {
-	        	  sendfollowing.put("Followers", jsonfollowing);
-	          }
+	          
 	      
-	          writer.write(sendfollowing.toString());
+	          writer.write(jsonfollowing);
 	          writer.flush();
 	          writer.close();
-	        } catch (IOException | JSONException e) {
+	        } catch (IOException e) {
 	          try{
 	        	  response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 	              response.getWriter().print(e.getMessage());
@@ -92,6 +87,7 @@ public class FollowingServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		 ObjectMapper mapper = new ObjectMapper();
 		try {
             int length = request.getContentLength();
             byte[] input = new byte[length];
@@ -104,30 +100,34 @@ public class FollowingServlet extends HttpServlet {
           sin.close();
           jsonString = new String(input);
           System.out.println(jsonString);
-          JSONObject json = new JSONObject(jsonString);
-          int usr = json.getInt("userId");
-          int follow = json.getInt("followId");
-          
-          System.out.println("User ID:"+usr);
-          System.out.println("Follow ID:"+follow);
+          Following f = mapper.readValue(jsonString, Following.class);
+          int usr = f.getUserId();
+          int follow = f.getFollowId();
+          boolean op = f.isFollowing();
           
           String filename1 = getServletContext().getRealPath("/DBConfig.properties");
           String filename2 = getServletContext().getRealPath("/DBSetUp.dat");
           
           DbOperationsFollowing dbOpFollowers = new DbOperationsFollowing(filename1, filename2);
-          int done = dbOpFollowers.AddFollowing(follow, usr);
+          int done;
+          if(op){
+        	  done = dbOpFollowers.AddFollowing(follow, usr); 
+          }
+          else{
+        	  done = dbOpFollowers.DeleteFollowing(follow, usr);
+          }
           
-          ObjectMapper mapper = new ObjectMapper();
-          String jsonStr = mapper.writeValueAsString(done);
-          System.out.println(jsonStr);
+          if(done==0){
+        	  f.setStatusFollowFailed();
+          }
+          
+          String jsonStr = mapper.writeValueAsString(f);
           OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
-          JSONObject sendRes = new JSONObject();
-          sendRes.put("Done", jsonStr);
       
-          writer.write(sendRes.toString());
+          writer.write(jsonStr);
           writer.flush();
           writer.close();
-        } catch (IOException | JSONException e) {
+        } catch (IOException e) {
           try{
         	  response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
               response.getWriter().print(e.getMessage());

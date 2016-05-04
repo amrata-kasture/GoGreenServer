@@ -56,13 +56,12 @@ public class AnswerServlet extends HttpServlet {
 	          String jsonanswers = mapper.writeValueAsString(answers);
 	          System.out.println(jsonanswers);
 	          OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
-	          JSONObject sendanswers = new JSONObject();
-	          sendanswers.put("Answers", jsonanswers);
 	      
-	          writer.write(sendanswers.toString());
+	      
+	          writer.write(jsonanswers);
 	          writer.flush();
 	          writer.close();
-	        } catch (IOException | JSONException e) {
+	        } catch (IOException e) {
 	          try{
 	        	  response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 	              response.getWriter().print(e.getMessage());
@@ -78,6 +77,7 @@ public class AnswerServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		ObjectMapper mapper = new ObjectMapper();
 		try {
             int length = request.getContentLength();
             byte[] input = new byte[length];
@@ -90,14 +90,8 @@ public class AnswerServlet extends HttpServlet {
           sin.close();
           jsonString = new String(input);
           System.out.println(jsonString);
-          JSONObject json = new JSONObject(jsonString);
-          int usr = json.getInt("postedByUserId");
-          String postType = json.getString("postType");
-          String postMsg = json.getString("postMessage");
-          String pic = json.getString("postImageURL");
-          int qId = json.getInt("qId");
-          
-          GreenEntry ge = new GreenEntry(usr, postType, postMsg, pic);
+          GreenEntry ge = mapper.readValue(jsonString, GreenEntry.class);
+          int qId = ge.getQuestionIdForAnswers();
           
           String filename1 = getServletContext().getRealPath("/DBConfig.properties");
           String filename2 = getServletContext().getRealPath("/DBSetUp.dat");
@@ -108,17 +102,18 @@ public class AnswerServlet extends HttpServlet {
          DbOperationsQARelation dbOpQA = new DbOperationsQARelation(filename1, filename2);
          int done = dbOpQA.AddQARelation(qId, ansPostId);
          
-          ObjectMapper mapper = new ObjectMapper();
-          String jsonStr = mapper.writeValueAsString(done);
+         if(done>0){
+        	 ge.setPostId(ansPostId);
+         }
+         
+          String jsonStr = mapper.writeValueAsString(ge);
           System.out.println(jsonStr);
           OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
-          JSONObject sendRes = new JSONObject();
-          sendRes.put("Done", jsonStr);
       
-          writer.write(sendRes.toString());
+          writer.write(jsonStr);
           writer.flush();
           writer.close();
-        } catch (IOException | JSONException e) {
+        } catch (IOException e) {
           try{
         	  response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
               response.getWriter().print(e.getMessage());

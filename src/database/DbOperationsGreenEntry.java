@@ -169,7 +169,7 @@ public ArrayList<GreenEntry> getAnswers(int questionId){
 			//if (!rs.first()) return null;
 			while (rs.next())
 			{  
-			  GreenEntry ge = new GreenEntry(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getDate(6));
+			  GreenEntry ge = new GreenEntry(questionId, rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getDate(6));
 			  answers.add(ge);
 			}
 			System.out.println();
