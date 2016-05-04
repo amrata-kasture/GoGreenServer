@@ -103,7 +103,9 @@ public class FollowingServlet extends HttpServlet {
           Following f = mapper.readValue(jsonString, Following.class);
           int usr = f.getUserId();
           int follow = f.getFollowId();
+          String stat = f.getStatus();
           boolean op = f.isFollowing();
+          System.out.println(usr+ " "+ follow+ " "+op);
           
           String filename1 = getServletContext().getRealPath("/DBConfig.properties");
           String filename2 = getServletContext().getRealPath("/DBSetUp.dat");
@@ -119,7 +121,11 @@ public class FollowingServlet extends HttpServlet {
           
           if(done==0){
         	  f.setStatusFollowFailed();
+          }		          
+          else{
+        	  f.setStatus(stat);
           }
+          
           
           String jsonStr = mapper.writeValueAsString(f);
           OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());

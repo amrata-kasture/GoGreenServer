@@ -130,7 +130,7 @@ public class DbOperationsFollowing {
 			int columnCount = rsmd.getColumnCount();
 			while (rs.next())
 			{  
-			  User tempUser = new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4));
+			  User tempUser = new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), (rs.getInt(5)==1?"Indoor":"Outdoor"), rs.getString(6));
 			  following.add(tempUser);
 			}
 			System.out.println();
@@ -157,7 +157,7 @@ public class DbOperationsFollowing {
 			int columnCount = rsmd.getColumnCount();
 			while (rs.next())
 			{  
-			  User tempUser = new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4));
+			  User tempUser = new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), (rs.getInt(5)==1?"Indoor":"Outdoor"), rs.getString(6));
 			  followers.add(tempUser);
 			}
 			System.out.println();
