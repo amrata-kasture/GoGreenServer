@@ -191,35 +191,7 @@ public class DbOperationsGreenEntry {
 		return res;
 	}
 	
-public ArrayList<GreenEntry> getAnswers(int questionId){
-		
-		ArrayList<GreenEntry> answers = new ArrayList<GreenEntry>();
-        
-		Statement stmt;
-		try {
-			stmt = conn.createStatement();
-			String query =  props.getProperty("GET_GR_ANSWERS");
-			PreparedStatement preparedStmt = conn.prepareStatement(query);
-			System.out.println(query);
-			preparedStmt.setInt (1, questionId);
-			ResultSet rs = preparedStmt.executeQuery();
-			//if (!rs.first()) return null;
-			while (rs.next())
-			{  
-			  GreenEntry ge = new GreenEntry(questionId, rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getDate(6));
-			  answers.add(ge);
-			}
-			System.out.println();
-			rs.close();
-			stmt.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return answers;
-		
-	}
+
 	
 	public int DeleteGreenEntry(int id) {
 		int res = 1;

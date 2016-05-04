@@ -26,25 +26,7 @@ public class DbOperationsShare {
 			}
 	}
 	
-	public DbOperationsShare(String filename1, String filename2){
-		try {
-			this.conn = DatabaseConnector.getConnection(filename1);
-			FileInputStream inf1 = new FileInputStream(filename1);
-			Properties configProps = new Properties();
-			configProps.load(inf1);
-			
-			Statement stmt=conn.createStatement(); 
-			String query = configProps.getProperty("USE_DB");
-			stmt.executeUpdate(query);
-			
-			this.in = new FileInputStream(filename2);
-			props.load(in);
-		    
-		} catch (ClassNotFoundException | SQLException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+	
 
 	public int AddShare(int sharedById, int gEntryId) {
 		int res = 1;
