@@ -1,7 +1,9 @@
 package database;
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -86,7 +88,22 @@ public class DbOperationsNotification {
 			ResultSet rs = stmt.executeQuery(query);
 			while (rs.next())
 			{   
-				arr.add(new Notification(rs.getInt("id"),rs.getInt("green_entry_id"),rs.getInt("event_id"),rs.getString("notification_msg"),rs.getDate("creation_date")));
+				String temp = "";
+				InputStream tempPic = null;
+				String qry =  props.getProperty("GET_USER_INFO_BY_EVENTID");
+				PreparedStatement preparedStmt = conn.prepareStatement(qry);
+				preparedStmt.setInt (1, rs.getInt("event_id"));
+				ResultSet tempRset = preparedStmt.executeQuery();
+				if(tempRset.next())
+		        {
+		            temp = tempRset.getString("first_name") + " " + tempRset.getString("last_name");
+		            System.out.println("$$$$$$$$$$$$$"+temp);
+		            if(tempRset.getString("picture")!=null){
+		            	tempPic = tempRset.getBinaryStream("picture");
+					   }
+		        }
+				arr.add(new Notification(rs.getInt("id"),rs.getInt("green_entry_id"),rs.getInt("event_id"),rs.getString("notification_msg"),rs.getDate("creation_date"),temp,getStringFromInputStream(tempPic)));
+				preparedStmt.close();
 			}
 			rs.close();
 			stmt.close();
@@ -108,9 +125,26 @@ public class DbOperationsNotification {
 			   preparedStmt.setInt (1, notifId);
 			   ResultSet rs = preparedStmt.executeQuery();
 			   if (rs.next()) {
-				   nf = new Notification(rs.getInt("id"),rs.getInt("green_entry_id"),rs.getInt("event_id"),rs.getString("notification_msg"),rs.getDate("creation_date"));
+				   String temp = "";
+					InputStream tempPic = null;
+					String qry =  props.getProperty("GET_USER_INFO_BY_EVENTID");
+					PreparedStatement prepStmt2 = conn.prepareStatement(qry);
+					prepStmt2.setInt (1, rs.getInt("id"));
+					ResultSet tempRset = prepStmt2.executeQuery();
+					if(tempRset.next())
+			        {
+			            temp = tempRset.getString("first_name") + " " + tempRset.getString("last_name");
+			            System.out.println("$$$$$$$$$$$$$"+temp);
+			            if(tempRset.getString("picture")!=null){
+			            	tempPic = tempRset.getBinaryStream("picture");
+						   }
+			        }
+					prepStmt2.close();
+					nf = new Notification(rs.getInt("id"),rs.getInt("green_entry_id"),rs.getInt("event_id"),rs.getString("notification_msg"),rs.getDate("creation_date"),temp,getStringFromInputStream(tempPic));
+				  // nf = new Notification(rs.getInt("id"),rs.getInt("green_entry_id"),rs.getInt("event_id"),rs.getString("notification_msg"),rs.getDate("creation_date"));
 			   }
 			   rs.close();
+			   
 			   preparedStmt.close();
 			} catch (SQLException | IOException e) {
 				e.printStackTrace();
@@ -154,6 +188,38 @@ public class DbOperationsNotification {
 		return res;
 	}
 	
+	private static String getStringFromInputStream(InputStream is) {
+
+		BufferedReader br = null;
+		StringBuilder sb = new StringBuilder();
+		String res=null;
+		String line;
+		try {
+			if(is!=null){
+			br = new BufferedReader(new InputStreamReader(is));
+			while ((line = br.readLine()) != null) {
+				sb.append(line);
+			}
+			}
+			res=sb.toString();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		//return sb.toString();
+		return res;
+
+	}
+	
 	public void destroy(){
 		try {
 			conn.close();
@@ -162,4 +228,5 @@ public class DbOperationsNotification {
 			e.printStackTrace();
 		}
 	}
+	
 }

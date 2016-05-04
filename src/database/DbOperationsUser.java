@@ -74,6 +74,7 @@ public class DbOperationsUser {
             last_inserted_id = rs.getInt(1);
             System.out.println("$$$$$$$$$$$$$"+last_inserted_id);
         }
+        preparedStmt.close();
 		stmt.close();
 		} catch (SQLException | IOException e1) {
 			e1.printStackTrace();
@@ -206,6 +207,8 @@ public class DbOperationsUser {
 					   System.out.println("************ rs1="+rs1.getString(1));
 					   user.setInterestArea(rs1.getString(1));
 				   }
+				   preparedStmt1.close();
+				   preparedStmt.close();
 				} catch (SQLException | IOException e) {
 					e.printStackTrace();
 				}
@@ -225,6 +228,7 @@ public class DbOperationsUser {
 			   if (rs.next()) {
 				   userid = rs.getInt(1);
 			   }
+			   preparedStmt.close();
 				} catch (SQLException | IOException e) {
 					e.printStackTrace();
 				}

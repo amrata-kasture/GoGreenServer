@@ -74,6 +74,7 @@ public class DbOperationsGreenEntry {
             last_inserted_id = rs.getInt(1);
             System.out.println("$$$$$$$$$$$$$"+last_inserted_id);
         }
+        preparedStmt.close();
 		stmt.close();
 		} catch (SQLException | IOException e1) {
 			e1.printStackTrace();
@@ -93,11 +94,29 @@ public class DbOperationsGreenEntry {
 			//int columnCount = rsmd.getColumnCount();
 			while (rs.next())
 			{   
+				String temp = "";
+				InputStream tempPic = null;
+				String qry =  props.getProperty("GET_NAME_N_PIC_BY_UID");
+				PreparedStatement preparedStmt = conn.prepareStatement(qry);
+				preparedStmt.setInt (1, rs.getInt("user_id"));
+				ResultSet tempRset = preparedStmt.executeQuery();
+				if(tempRset.next())
+		        {
+		            temp = tempRset.getString("first_name") + " " + tempRset.getString("last_name");
+		            System.out.println("$$$$$$$$$$$$$"+temp);
+		            if(tempRset.getString("picture")!=null){
+		            	tempPic = tempRset.getBinaryStream("picture");
+					   }
+		        }
 			    InputStream is = null;
 					if(rs.getBinaryStream("picture")!=null){
 					   is = rs.getBinaryStream("picture");
 				   }
-				arr.add(new GreenEntry(rs.getInt("id"),rs.getInt("user_id"),rs.getString("type"),rs.getString("message"),getStringFromInputStream(is),rs.getDate("creation_date")));
+				
+				arr.add(new GreenEntry(rs.getInt("id"),rs.getInt("user_id"),temp,rs.getString("type"),rs.getString("message"),getStringFromInputStream(is),getStringFromInputStream(tempPic),rs.getDate("creation_date")));
+				is.close();
+				tempPic.close();
+				preparedStmt.close();
 			}
 			rs.close();
 			stmt.close();
@@ -121,11 +140,29 @@ public class DbOperationsGreenEntry {
 			//int columnCount = rsmd.getColumnCount();
 			while (rs.next())
 			{   
+				String temp = "";
+				InputStream tempPic = null;
+				String qry =  props.getProperty("GET_NAME_N_PIC_BY_UID");
+				PreparedStatement preparedStmt = conn.prepareStatement(qry);
+				preparedStmt.setInt (1, rs.getInt("user_id"));
+				ResultSet tempRset = preparedStmt.executeQuery();
+				if(tempRset.next())
+		        {
+		            temp = tempRset.getString("first_name") + " " + tempRset.getString("last_name");
+		            System.out.println("$$$$$$$$$$$$$"+temp);
+		            if(tempRset.getString("picture")!=null){
+		            	tempPic = tempRset.getBinaryStream("picture");
+					   }
+		        }
 			    InputStream is = null;
 					if(rs.getBinaryStream("picture")!=null){
 					   is = rs.getBinaryStream("picture");
 				   }
-				arr.add(new GreenEntry(rs.getInt("id"),rs.getInt("user_id"),rs.getString("type"),rs.getString("message"),getStringFromInputStream(is),rs.getDate("creation_date")));
+				
+				arr.add(new GreenEntry(rs.getInt("id"),rs.getInt("user_id"),temp,rs.getString("type"),rs.getString("message"),getStringFromInputStream(is),getStringFromInputStream(tempPic),rs.getDate("creation_date")));
+			is.close();
+			tempPic.close();
+			preparedStmt.close();
 			}
 			rs.close();
 			stmt.close();
@@ -176,14 +213,16 @@ public class DbOperationsGreenEntry {
 
 		BufferedReader br = null;
 		StringBuilder sb = new StringBuilder();
-
+		String res=null;
 		String line;
 		try {
-
+			if(is!=null){
 			br = new BufferedReader(new InputStreamReader(is));
 			while ((line = br.readLine()) != null) {
 				sb.append(line);
 			}
+			}
+			res=sb.toString();
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -197,7 +236,8 @@ public class DbOperationsGreenEntry {
 			}
 		}
 
-		return sb.toString();
+		//return sb.toString();
+		return res;
 
 	}
 

@@ -13,21 +13,48 @@ public class GreenEntry {
 	private String postImageURL;
 	private int numOfShares;
 	private int numOfStars;
+	private String postByUserName;
+	private String userImage;
 	
 	public GreenEntry(){
 		
 	}
 	
 	
-	public GreenEntry(int postidInt,int userid_posted, String postTypeString, String postMsg, String blob, Date date) {
+	public GreenEntry(int postidInt,int userid_posted, String postByUserName, String postTypeString, String postMsg, String blob, String userImage, Date date) {
 		this.postId=postidInt;
 		this.postedByUserId = userid_posted;
 		this.postType = postTypeString;
 		this.postMessage = postMsg;
-		this.postImageURL=blob.toString();
+		this.postImageURL=blob;
 		this.datePosted = date.toString();
+		this.postByUserName=postByUserName;
+		this.userImage = userImage;
 		// TODO Auto-generated constructor stub
 	}
+	
+	
+	
+	public String getUserImage() {
+		return userImage;
+	}
+
+
+	public void setUserImage(String userImage) {
+		this.userImage = userImage;
+	}
+
+
+	public String getPostByUserName() {
+		return postByUserName;
+	}
+
+
+	public void setPostByUserName(String postByUserName) {
+		this.postByUserName = postByUserName;
+	}
+
+
 	public int getPostId() {
 		return postId;
 	}
@@ -82,8 +109,11 @@ public class GreenEntry {
 	public String toString() {
 		return "GreenEntry [postId=" + postId + ", postedByUserId=" + postedByUserId + ", postType=" + postType
 				+ ", postMessage=" + postMessage + ", datePosted=" + datePosted + ", postImageURL=" + postImageURL
-				+ ", numOfShares=" + numOfShares + ", numOfStars=" + numOfStars + "]";
+				+ ", numOfShares=" + numOfShares + ", numOfStars=" + numOfStars + ", postByUserName=" + postByUserName
+				+ ", userImage=" + userImage+"]";
 	}
+
+
 	
 	
 }
