@@ -1,6 +1,8 @@
 package model;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
 	private int userId;
 	private String username;
 	private String password;
@@ -39,6 +41,17 @@ public class User {
 	        this.lastName=ln;
 	        this.roleType=rt;
 	    }
+	    
+	    
+	    public User(int uid, String fn, String ln, String rt, String ia, String pic){
+	    	this.userId=uid;
+	        this.firstName=fn;
+	        this.lastName=ln;
+	        this.roleType=rt;
+	        this.interestArea=ia;
+	        this.imageURL=pic;
+	    }
+	    
 	 
 	    public User(String username, String firstName, String lastName, String roleType,String interestArea, String city, String state, String imageURL) {
 	    	this.username = username;

@@ -2,9 +2,10 @@ package model;
 
 public class Following {
 	
-	private int userId;
-	private int followId;
-	private String status;
+	 private int userId=0;
+	 private int followId=0;
+	 private String status="";
+	 private boolean following=false;
 	
 	public Following(){
 		
@@ -67,6 +68,9 @@ public class Following {
 		this.status = status;
 	}
 	
-	
+	@Override
+    public String toString(){
+        return (userId + ", " + followId + ", " + status);
+    }
 
 }

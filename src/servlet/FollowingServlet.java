@@ -103,7 +103,10 @@ public class FollowingServlet extends HttpServlet {
           Following f = mapper.readValue(jsonString, Following.class);
           int usr = f.getUserId();
           int follow = f.getFollowId();
+          String stat = f.getStatus();
           boolean op = f.isFollowing();
+          
+          System.out.println(usr+ " "+ follow+ " "+op);
           
           String filename1 = getServletContext().getRealPath("/DBConfig.properties");
           String filename2 = getServletContext().getRealPath("/DBSetUp.dat");
@@ -117,11 +120,18 @@ public class FollowingServlet extends HttpServlet {
         	  done = dbOpFollowers.DeleteFollowing(follow, usr);
           }
           
+          
           if(done==0){
         	  f.setStatusFollowFailed();
           }
+          else{
+        	  f.setStatus(stat);
+          }
+          
+          System.out.println(done);
           
           String jsonStr = mapper.writeValueAsString(f);
+          System.out.println(jsonStr);
           OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
       
           writer.write(jsonStr);
