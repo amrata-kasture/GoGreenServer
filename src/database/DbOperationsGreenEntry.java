@@ -103,7 +103,7 @@ public class DbOperationsGreenEntry {
 				if(tempRset.next())
 		        {
 		            temp = tempRset.getString("first_name") + " " + tempRset.getString("last_name");
-		            System.out.println("$$$$$$$$$$$$$"+temp);
+		            
 		            if(tempRset.getString("picture")!=null){
 		            	tempPic = tempRset.getBinaryStream("picture");
 					   }
@@ -149,7 +149,7 @@ public class DbOperationsGreenEntry {
 				if(tempRset.next())
 		        {
 		            temp = tempRset.getString("first_name") + " " + tempRset.getString("last_name");
-		            System.out.println("$$$$$$$$$$$$$"+temp);
+		            
 		            if(tempRset.getString("picture")!=null){
 		            	tempPic = tempRset.getBinaryStream("picture");
 					   }
@@ -218,6 +218,7 @@ public class DbOperationsGreenEntry {
 		 		Statement stmt;
 		 		try {
 		 			stmt = conn.createStatement();
+		 			props.load(in);
 		 			String query =  props.getProperty("GET_GR_ANSWERS");
 		 			PreparedStatement preparedStmt = conn.prepareStatement(query);
 		 			System.out.println(query);
@@ -229,14 +230,14 @@ public class DbOperationsGreenEntry {
 		 			  String temp = "";
 						InputStream tempPic = null;
 						String qry =  props.getProperty("GET_NAME_N_PIC_BY_UID");
-						PreparedStatement prepStmt = conn.prepareStatement(qry);
-						preparedStmt.setInt (1, rs.getInt("user_id"));
-						ResultSet tempRset = preparedStmt.executeQuery();
+						PreparedStatement prepStmt2 = conn.prepareStatement(qry);
+						prepStmt2.setInt (1, rs.getInt("user_id"));
+						ResultSet tempRset = prepStmt2.executeQuery();
 						if(tempRset.next())
 				        {
 				            temp = tempRset.getString("first_name") + " " + tempRset.getString("last_name");
-				            System.out.println("$$$$$$$$$$$$$"+temp);
-				            if(tempRset.getString("picture")!=null){
+				            
+				            if(tempRset.getBinaryStream("picture")!=null){
 				            	tempPic = tempRset.getBinaryStream("picture");
 							   }
 				        }
@@ -244,15 +245,18 @@ public class DbOperationsGreenEntry {
 							if(rs.getBinaryStream("picture")!=null){
 							   is = rs.getBinaryStream("picture");
 						   }
-		GreenEntry ge =new GreenEntry(rs.getInt("id"),rs.getInt("user_id"),temp,rs.getString("type"),rs.getString("message"),getStringFromInputStream(is),getStringFromInputStream(tempPic),rs.getDate("creation_date"));		
+		GreenEntry ge =new GreenEntry(questionId,rs.getInt("id"),rs.getInt("user_id"),rs.getString("type"),rs.getString("message"),getStringFromInputStream(is),temp,getStringFromInputStream(tempPic),rs.getDate("creation_date"));		
 		 //GreenEntry ge = new GreenEntry(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getDate(6));
 		 			  
 		 			  answers.add(ge);
+		 			 prepStmt2.close();
+		 			tempRset.close();
 		 			}
 		 			System.out.println();
+		 			preparedStmt.close();
 		 			rs.close();
 		 			stmt.close();
-		 		} catch (SQLException e) {
+		 		} catch (SQLException | IOException e) {
 		 			// TODO Auto-generated catch block
 		 			e.printStackTrace();
 		 		}

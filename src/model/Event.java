@@ -16,6 +16,20 @@ public class Event {
 	private int eventHostedById;
 	private int interestAreaId;
 	
+	public Event(){
+		
+	}
+	
+	public Event(int eId,String title, String description, String location, String eDate, String eStTime, String eEnTime){
+		this.eventId = eId;
+		this.eventTitle = title;
+		this.eventDescription = description;
+		this.eventLocation = location;
+		this.eventDate = eDate;
+		this.eventStartTime = eStTime;
+		this.eventEndTime = eEnTime;
+	}
+	
 	public int getEventId() {
 		return eventId;
 	}

@@ -37,7 +37,34 @@ public class EventServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getOutputStream().println("Hurray !! EventServlet Works");
+		//response.getOutputStream().println("Hurray !! EventServlet Works");
+		JSONObject json = new JSONObject();
+        try {
+
+          ObjectMapper mapper = new ObjectMapper();
+          String filename1 = getServletContext().getRealPath("/DBConfig.properties");
+          String filename2 = getServletContext().getRealPath("/DBSetUp.dat");
+          String eventId = request.getParameter("eventId");
+          System.out.println("####"+eventId);
+          DbOperationsEvent dbOpEvent = new DbOperationsEvent(filename1, filename2);
+          Event resultEvent = dbOpEvent.GetEventDetailsFromEventId(Integer.parseInt(eventId));
+          String outString = mapper.writeValueAsString(resultEvent); 
+          System.out.println("####"+resultEvent.toString());
+          OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
+          writer.write(outString);
+          writer.flush();
+          writer.close();
+          
+          response.getOutputStream().println("Hurray !! EventServlet Works END");
+        } catch (IOException e) {
+          try{
+        	  response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+              response.getWriter().print(e.getMessage());
+              response.getWriter().close();
+            } catch (IOException ioe) {
+
+            }
+        }
 	}
 
 	/**
@@ -61,6 +88,7 @@ public class EventServlet extends HttpServlet {
 	          System.out.println(jsonString);
 	          ObjectMapper mapper = new ObjectMapper();
 	          Event e = mapper.readValue(jsonString, Event.class);
+	          System.out.println("!!!!!!!!!!!!!"+e.toString());
 	          
 	          String filename1 = getServletContext().getRealPath("/DBConfig.properties");
 	          String filename2 = getServletContext().getRealPath("/DBSetUp.dat");

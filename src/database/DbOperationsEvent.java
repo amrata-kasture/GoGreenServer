@@ -1,16 +1,22 @@
 package database;
 import java.io.FileInputStream;
+
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Properties;
 
 import model.Event;
+import model.User;
 
 public class DbOperationsEvent {
 	Properties props = new Properties();
@@ -61,7 +67,18 @@ public class DbOperationsEvent {
 		preparedStmt.setString (1, e.getEventTitle());
 		preparedStmt.setString (2, e.getEventDescription());
 		preparedStmt.setString (3, e.getEventLocation());
-		preparedStmt.setString (4, e.getEventDate());
+		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+		try {
+			System.out.println("******"+e.getEventDate());
+			String tempDate = e.getEventDate().replaceAll("\\/","/");
+			java.util.Date utilStartDate = formatter.parse(tempDate);
+			java.sql.Date sqlStartDate = new java.sql.Date(utilStartDate.getTime());
+			System.out.println("******"+sqlStartDate);
+			preparedStmt.setDate (4, sqlStartDate);
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		preparedStmt.setString (5, e.getEventStartTime());
 		preparedStmt.setString (6, e.getEventEndTime());
 		preparedStmt.setInt (7, e.getEventHostedById());
@@ -79,6 +96,25 @@ public class DbOperationsEvent {
 		} 
 		System.out.println("%%%%%%%%%%%%%%%"+last_inserted_id);
 		return last_inserted_id;
+	}
+	
+	
+	public Event GetEventDetailsFromEventId(int eventId){
+		Event e = new Event();
+		   try{
+			   props.load(in);
+			   String query =  props.getProperty("GET_EVENT_DETAILS_BY_ID");
+			   PreparedStatement preparedStmt = conn.prepareStatement(query);
+			   preparedStmt.setInt (1, eventId);
+			   ResultSet rs = preparedStmt.executeQuery();
+			   if (rs.next()) {
+				   e = new Event(rs.getInt("id"),rs.getString("title"),rs.getString("description"),rs.getString("location"),rs.getString("event_date"),rs.getString("start_time"),rs.getString("end_time"));
+			   }
+			   preparedStmt.close();
+			} catch (SQLException | IOException ex) {
+				ex.printStackTrace();
+			}
+		return e;
 	}
 	
 	public ArrayList<String> ReadEvent() {

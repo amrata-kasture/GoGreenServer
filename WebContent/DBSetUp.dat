@@ -42,6 +42,7 @@ READ_CREATOR_EVENT =  Select * from event Where creator_id = ?
 UPDATE_EVENT = Update event SET location = ? Where id = ?  
 UPDATE_EVENT = Update event SET 
 DELETE_EVENT = Delete from event where id = ?
+GET_EVENT_DETAILS_BY_ID = Select * from event Where id = ? 
 
 GETIDRIGHT_NOTIFICATION = ALTER TABLE notification AUTO_INCREMENT=1
 ADD_NOTIFICATION = Insert IGNORE into notification (green_entry_id, event_id, notification_msg, creation_date) Values (?,?,?,NOW())

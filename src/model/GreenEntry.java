@@ -42,6 +42,21 @@ public class GreenEntry {
 		this.postImageURL=pic;
 	}
 	
+	public GreenEntry(int qid, int postidInt,int userid_posted, String postTypeString, String postMsg, String blob,String uName, String uImage, Date date) {
+		this.questionIdForAnswers=qid;
+		this.postId=postidInt;
+		this.postedByUserId = userid_posted;
+		this.postType = postTypeString;
+		this.postMessage = postMsg;
+		this.postImageURL=blob.toString();
+		this.datePosted = date.toString();
+		this.postByUserName = uName;
+		this.userImage= uImage;
+		
+		// TODO Auto-generated constructor stub
+	}
+	
+	
 	
 	public GreenEntry(int postidInt,int userid_posted, String postByUserName, String postTypeString, String postMsg, String blob, String userImage, Date date) {
 		this.postId=postidInt;
@@ -84,16 +99,6 @@ public class GreenEntry {
 
 
 
-	public GreenEntry(int qid, int postidInt,int userid_posted, String postTypeString, String postMsg, String blob, Date date) {
-		this.questionIdForAnswers=qid;
-		this.postId=postidInt;
-		this.postedByUserId = userid_posted;
-		this.postType = postTypeString;
-		this.postMessage = postMsg;
-		this.postImageURL=blob.toString();
-		this.datePosted = date.toString();
-		// TODO Auto-generated constructor stub
-	}
 	
 
 	public int getPostId() {
