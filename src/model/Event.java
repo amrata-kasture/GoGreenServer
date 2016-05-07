@@ -84,5 +84,15 @@ public class Event {
 	public void setInterestAreaId(int interestAreaId) {
 		this.interestAreaId = interestAreaId;
 	}
+
+	@Override
+	public String toString() {
+		return "Event [eventId=" + eventId + ", eventTitle=" + eventTitle + ", eventDescription=" + eventDescription
+				+ ", eventLocation=" + eventLocation + ", eventDate=" + eventDate + ", eventStartTime=" + eventStartTime
+				+ ", eventEndTime=" + eventEndTime + ", eventHostedById=" + eventHostedById + ", interestAreaId="
+				+ interestAreaId + "]";
+	}
+	
+	
 }
 

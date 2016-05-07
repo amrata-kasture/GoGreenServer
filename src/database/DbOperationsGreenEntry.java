@@ -115,7 +115,7 @@ public class DbOperationsGreenEntry {
 				
 				arr.add(new GreenEntry(rs.getInt("id"),rs.getInt("user_id"),temp,rs.getString("type"),rs.getString("message"),getStringFromInputStream(is),getStringFromInputStream(tempPic),rs.getDate("creation_date")));
 				is.close();
-				tempPic.close();
+				tempRset.close();
 				preparedStmt.close();
 			}
 			rs.close();
@@ -161,7 +161,7 @@ public class DbOperationsGreenEntry {
 				
 				arr.add(new GreenEntry(rs.getInt("id"),rs.getInt("user_id"),temp,rs.getString("type"),rs.getString("message"),getStringFromInputStream(is),getStringFromInputStream(tempPic),rs.getDate("creation_date")));
 			is.close();
-			tempPic.close();
+			tempRset.close();
 			preparedStmt.close();
 			}
 			rs.close();
